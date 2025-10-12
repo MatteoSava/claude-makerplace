@@ -1,0 +1,90 @@
+{
+  "name": "claude-makerplace",
+  "owner": {
+    "name": "Independent Claude Makerplace"
+  },
+  "description": "A sanitized Claude Code plugin marketplace containing senior engineering skills, commands, agents, hooks, and validation workflows.",
+  "version": "1.0.0",
+  "metadata": {
+    "description": "A sanitized Claude Code plugin marketplace containing senior engineering skills, commands, agents, hooks, and validation workflows.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "agentic-research",
+      "source": "./plugins/agentic-research",
+      "description": "Skills for self-improving agents, benchmark loops, experiment registries, trace continuity, and score-model investigation.",
+      "version": "1.0.0",
+      "license": "MIT",
+      "category": "Developer Tools",
+      "tags": [
+        "agentic-research",
+        "skill-autoresearch",
+        "benchmarks",
+        "observability"
+      ]
+    },
+    {
+      "name": "cloud-delivery",
+      "source": "./plugins/cloud-delivery",
+      "description": "Skills for cloud deployment, Azure DevOps delivery, infrastructure standards, and operational workflows.",
+      "version": "1.0.0",
+      "license": "MIT",
+      "category": "Developer Tools",
+      "tags": [
+        "cloud",
+        "azure",
+        "devops",
+        "infrastructure",
+        "delivery"
+      ]
+    },
+    {
+      "name": "product-engineering",
+      "source": "./plugins/product-engineering",
+      "description": "Skills for full-stack product work, frontend standards, streaming, UI validation, mini-apps, and wallet integrations.",
+      "version": "1.0.0",
+      "license": "MIT",
+      "category": "Developer Tools",
+      "tags": [
+        "full-stack",
+        "frontend",
+        "api",
+        "playwright",
+        "product"
+      ]
+    },
+    {
+      "name": "python-quality",
+      "source": "./plugins/python-quality",
+      "description": "Python quality skills, agents, and hooks using uv with pinned Ruff, Pyright, Mypy, and pytest.",
+      "version": "1.0.0",
+      "license": "MIT",
+      "category": "Developer Tools",
+      "tags": [
+        "python",
+        "uv",
+        "ruff",
+        "pyright",
+        "mypy",
+        "hooks"
+      ]
+    },
+    {
+      "name": "makerplace-system",
+      "source": "./plugins/makerplace-system",
+      "description": "Marketplace maintenance commands, audit agents, sanitization hooks, and release-readiness workflows.",
+      "version": "1.0.0",
+      "license": "MIT",
+      "category": "Developer Tools",
+      "tags": [
+        "marketplace",
+        "commands",
+        "agents",
+        "hooks",
+        "validation",
+        "release-readiness"
+      ]
+    }
+  ]
+}
