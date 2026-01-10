@@ -1,0 +1,18 @@
+{
+  "name": "product-engineering",
+  "version": "1.0.0",
+  "description": "Skills for full-stack product work across React, ASP.NET-style APIs, streaming, Playwright validation, mini-apps, and wallet integrations.",
+  "author": {
+    "name": "Independent Claude Makerplace"
+  },
+  "license": "MIT",
+  "keywords": [
+    "claude-code",
+    "skills",
+    "frontend",
+    "react",
+    "api",
+    "playwright",
+    "full-stack"
+  ]
+}
