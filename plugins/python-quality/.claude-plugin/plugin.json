@@ -1,0 +1,23 @@
+{
+  "name": "python-quality",
+  "version": "1.0.0",
+  "description": "Python quality skills, agents, and PostToolUse hooks using uv with pinned Ruff, Pyright, Mypy, and pytest.",
+  "author": {
+    "name": "Independent Claude Makerplace"
+  },
+  "license": "MIT",
+  "agents": [
+    "./agents/python-quality-reviewer.md"
+  ],
+  "keywords": [
+    "claude-code",
+    "skills",
+    "python",
+    "uv",
+    "ruff",
+    "pyright",
+    "mypy",
+    "pytest",
+    "hooks"
+  ]
+}
