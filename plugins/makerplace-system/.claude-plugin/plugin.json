@@ -1,0 +1,23 @@
+{
+  "name": "makerplace-system",
+  "version": "1.0.0",
+  "description": "Marketplace maintenance commands, audit agents, and sanitization hooks for Claude Makerplace.",
+  "author": {
+    "name": "Independent Claude Makerplace"
+  },
+  "license": "MIT",
+  "commands": "./commands",
+  "agents": [
+    "./agents/marketplace-auditor.md",
+    "./agents/skill-curator.md"
+  ],
+  "keywords": [
+    "claude-code",
+    "marketplace",
+    "commands",
+    "subagents",
+    "sanitization",
+    "validation",
+    "release-readiness"
+  ]
+}
