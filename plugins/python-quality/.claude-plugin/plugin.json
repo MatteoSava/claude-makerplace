@@ -1,7 +1,7 @@
 {
   "name": "python-quality",
   "version": "1.0.0",
-  "description": "Python quality skills, agents, and PostToolUse hooks using uv with pinned Ruff, Pyright, Mypy, and pytest.",
+  "description": "Python quality skills, agents, hooks, and Pyright LSP using uv with pinned Ruff, Pyright, Mypy, and pytest.",
   "author": {
     "name": "Independent Claude Makerplace"
   },
@@ -9,6 +9,7 @@
   "agents": [
     "./agents/python-quality-reviewer.md"
   ],
+  "lspServers": "./.lsp.json",
   "keywords": [
     "claude-code",
     "skills",
@@ -18,6 +19,7 @@
     "pyright",
     "mypy",
     "pytest",
-    "hooks"
+    "hooks",
+    "lsp"
   ]
 }

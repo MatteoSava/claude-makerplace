@@ -1,0 +1,16 @@
+{
+  "pyright": {
+    "command": "uv",
+    "args": [
+      "run",
+      "--with",
+      "pyright==1.1.409",
+      "pyright-langserver",
+      "--stdio"
+    ],
+    "extensionToLanguage": {
+      ".py": "python",
+      ".pyi": "python"
+    }
+  }
+}
