@@ -40,7 +40,10 @@ class Finding:
     message: str
 
 
-def parse_frontmatter(text: str) -> tuple[dict[str, object], str]:
+FrontmatterValue = str | list[str]
+
+
+def parse_frontmatter(text: str) -> tuple[dict[str, FrontmatterValue], str]:
     if not text.startswith("---\n"):
         return {}, text
     end = text.find("\n---\n", 4)
@@ -48,15 +51,17 @@ def parse_frontmatter(text: str) -> tuple[dict[str, object], str]:
         return {}, text
     raw = text[4:end]
     body = text[end + 5 :]
-    data: dict[str, object] = {}
+    data: dict[str, FrontmatterValue] = {}
     current_key: str | None = None
     for line in raw.splitlines():
         if not line.strip():
             continue
         if line.startswith("  - ") and current_key:
-            data.setdefault(current_key, [])
-            if isinstance(data[current_key], list):
-                data[current_key].append(line[4:].strip())
+            values = data.get(current_key)
+            if not isinstance(values, list):
+                values = []
+                data[current_key] = values
+            values.append(line[4:].strip())
             continue
         if ":" in line and not line.startswith(" "):
             key, val = line.split(":", 1)
@@ -112,11 +117,13 @@ def lint(docs: Path, repo_root: Path) -> list[Finding]:
     if not docs.exists():
         return [Finding("critical", str(docs), "docs directory does not exist")]
 
-    for rel in REQUIRED_ROOT_FILES:
-        if not (docs / rel).exists():
+    for required_rel in REQUIRED_ROOT_FILES:
+        if not (docs / required_rel).exists():
             findings.append(
                 Finding(
-                    "critical", str(docs / rel), "required docs-wiki file is missing"
+                    "critical",
+                    str(docs / required_rel),
+                    "required docs-wiki file is missing",
                 )
             )
 
@@ -124,17 +131,21 @@ def lint(docs: Path, repo_root: Path) -> list[Finding]:
     linked: set[Path] = set()
 
     for page in pages:
-        rel = page.relative_to(repo_root) if page.is_relative_to(repo_root) else page
+        page_rel = (
+            page.relative_to(repo_root) if page.is_relative_to(repo_root) else page
+        )
         text = page.read_text(encoding="utf-8", errors="replace")
         fm, _body = parse_frontmatter(text)
         if not fm:
-            findings.append(Finding("high", str(rel), "missing YAML frontmatter"))
+            findings.append(Finding("high", str(page_rel), "missing YAML frontmatter"))
         else:
             for field in REQUIRED_FIELDS:
                 if field not in fm:
                     findings.append(
                         Finding(
-                            "medium", str(rel), f"missing frontmatter field: {field}"
+                            "medium",
+                            str(page_rel),
+                            f"missing frontmatter field: {field}",
                         )
                     )
             refs = fm.get("source_refs", [])
@@ -142,14 +153,20 @@ def lint(docs: Path, repo_root: Path) -> list[Finding]:
                 refs = [refs]
             if not refs and fm.get("type") not in {"index", "meta"}:
                 findings.append(
-                    Finding("medium", str(rel), "non-meta page has empty source_refs")
+                    Finding(
+                        "medium",
+                        str(page_rel),
+                        "non-meta page has empty source_refs",
+                    )
                 )
             if isinstance(refs, list):
                 for ref in refs:
                     if not source_path_exists(str(ref), repo_root):
                         findings.append(
                             Finding(
-                                "high", str(rel), f"source_ref path not found: {ref}"
+                                "high",
+                                str(page_rel),
+                                f"source_ref path not found: {ref}",
                             )
                         )
 
@@ -163,7 +180,7 @@ def lint(docs: Path, repo_root: Path) -> list[Finding]:
                 linked.add(resolved)
             if not link_target_exists(page, target, docs):
                 findings.append(
-                    Finding("medium", str(rel), f"broken Markdown link: {target}")
+                    Finding("medium", str(page_rel), f"broken Markdown link: {target}")
                 )
 
     index_path = (docs / "index.md").resolve()
@@ -171,13 +188,13 @@ def lint(docs: Path, repo_root: Path) -> list[Finding]:
         if page.resolve() == index_path or "_meta" in page.parts:
             continue
         if page.resolve() not in linked:
-            rel = (
+            page_rel = (
                 page.relative_to(repo_root) if page.is_relative_to(repo_root) else page
             )
             findings.append(
                 Finding(
                     "low",
-                    str(rel),
+                    str(page_rel),
                     "possible orphan page: no inbound Markdown link detected",
                 )
             )

@@ -30,6 +30,8 @@
       "Plan a bounded agent experiment.",
       "Review a benchmark result."
     ],
-    "brandColor": "#2563EB"
+    "brandColor": "#2563EB",
+    "composerIcon": "./assets/icon.png",
+    "logo": "./assets/icon.png"
   }
 }

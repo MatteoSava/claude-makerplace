@@ -123,8 +123,8 @@ def run_command(
     except FileNotFoundError as exc:
         return 127, str(exc)
     except subprocess.TimeoutExpired as exc:
-        output = exc.stdout if isinstance(exc.stdout, str) else ""
-        return 124, (output + f"\nTimed out after {timeout}s").strip()
+        output_text = exc.stdout if isinstance(exc.stdout, str) else ""
+        return 124, f"{output_text}\nTimed out after {timeout}s".strip()
     return completed.returncode, completed.stdout.strip()
 
 
