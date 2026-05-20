@@ -1,0 +1,12 @@
+# Merge this into your Codex config.toml if you prefer config-based MCP setup.
+# Alternatively run:
+#   codex mcp add chrome-devtools -- npx chrome-devtools-mcp@latest
+
+[mcp_servers.chrome-devtools]
+command = "npx"
+args = ["-y", "chrome-devtools-mcp@latest", "--isolated"]
+startup_timeout_ms = 20000
+
+# Optional hook config in TOML style. The JSON hooks file is easier to copy.
+# [features]
+# hooks = true

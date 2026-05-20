@@ -1,0 +1,7 @@
+# Optional Codex config fragment for AgentOps Continuity.
+# Keep hooks in .codex/hooks.json for simpler repo-local install.
+
+[features]
+hooks = true
+
+# Codex discovers skills from .agents/skills automatically when the repo layer is trusted.

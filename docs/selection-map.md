@@ -25,6 +25,7 @@ This package keeps the selected skill set small and grouped by operational domai
 - `react-typescript-standards`: React and TypeScript implementation guidance.
 - `sse-chat-streaming`: explicit streaming protocol guidance.
 - `playwright-ui-validation`: browser-level UI validation.
+- `webqa-devtools`: Chrome DevTools MCP browser QA and debugging evidence.
 - `telegram-miniapp-feature`: Telegram Mini App feature workflow.
 - `ton-wallet-integration`: wallet and payment integration workflow.
 - `intent-system-extension`: deterministic intent-system extension workflow.
@@ -41,3 +42,4 @@ This package keeps the selected skill set small and grouped by operational domai
 ## Agent Harness Control
 
 - `repo-sentinel`: deterministic repository guardrails for Claude Code and Codex hooks.
+- `agentops-continuity`: task state, compaction recovery, handoff, and verification continuity.

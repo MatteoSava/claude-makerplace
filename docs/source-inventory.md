@@ -19,9 +19,12 @@ This sanitized inventory records the public skill surface bundled in Claude Make
 | product-engineering | `react-typescript-standards` | `plugins/product-engineering/skills/react-typescript-standards/SKILL.md` |
 | product-engineering | `sse-chat-streaming` | `plugins/product-engineering/skills/sse-chat-streaming/SKILL.md` |
 | product-engineering | `playwright-ui-validation` | `plugins/product-engineering/skills/playwright-ui-validation/SKILL.md` |
+| product-engineering | `webqa-devtools` | `plugins/product-engineering/skills/webqa-devtools/SKILL.md` |
 | product-engineering | `telegram-miniapp-feature` | `plugins/product-engineering/skills/telegram-miniapp-feature/SKILL.md` |
 | product-engineering | `ton-wallet-integration` | `plugins/product-engineering/skills/ton-wallet-integration/SKILL.md` |
 | product-engineering | `intent-system-extension` | `plugins/product-engineering/skills/intent-system-extension/SKILL.md` |
 | python-quality | `python-quality-gate` | `plugins/python-quality/skills/python-quality-gate/SKILL.md` |
 | python-quality | `python-tdd` | `plugins/python-quality/skills/python-tdd/SKILL.md` |
 | repository-documentation | `repo-docs-wiki` | `plugins/repository-documentation/skills/repo-docs-wiki/SKILL.md` |
+| agent-harness-control | `repo-sentinel` | `plugins/agent-harness-control/skills/repo-sentinel/SKILL.md` |
+| agent-harness-control | `agentops-continuity` | `plugins/agent-harness-control/skills/agentops-continuity/SKILL.md` |

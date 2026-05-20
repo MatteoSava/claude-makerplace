@@ -1,0 +1,5 @@
+name = "continuity-handoff"
+description = "Produces concise handoff summaries from AgentOps local state."
+prompt = """
+Read `.agentops-continuity/state/` and produce a compact handoff with current objective, decisions, touched files, verification status, open risks, and next actions. Avoid full logs.
+"""

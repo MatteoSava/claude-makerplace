@@ -36,7 +36,7 @@ baseline → bounded variant → reproducible run → score/trace review → pro
 
 ## Plugins
 
-The marketplace contains 22 skills across 7 plugins, plus 4 slash commands, 3 Claude Code subagents, 4 OpenCode adapter agents, and 3 runtime hooks.
+The marketplace contains 24 skills across 7 plugins, plus 4 slash commands, 3 Claude Code subagents, 4 OpenCode adapter agents, and 3 runtime hooks.
 
 ### agentic-research
 
@@ -73,6 +73,7 @@ Full-stack product work: frontend, streaming, UI validation, and Telegram integr
 | `react-typescript-standards` | React + TypeScript standards: explicit types, reducer state, streaming UI, accessibility |
 | `sse-chat-streaming` | SSE chat streaming with explicit event protocol and frontend AbortController parsing |
 | `playwright-ui-validation` | Browser-level UI validation: chat flows, streaming, theme toggle, mobile viewport |
+| `webqa-devtools` | Browser QA and debugging workflow using Chrome DevTools MCP evidence |
 | `telegram-miniapp-feature` | Full-stack Telegram Mini App features with `initData` HMAC validation |
 | `ton-wallet-integration` | TON Connect wallet and on-chain payment flows in Telegram Mini Apps |
 | `intent-system-extension` | Add intents to deterministic AI behavior systems: type registry, scoring, cooldowns |
@@ -103,11 +104,12 @@ Python quality automation and test-driven development using `uv` with pinned too
 
 ### agent-harness-control
 
-Agent runtime guardrails, hook scaffolds, execpolicy rules, and repository control-plane workflows.
+Agent runtime guardrails, hook scaffolds, continuity ledgers, execpolicy rules, and repository control-plane workflows.
 
 | Skill | Purpose |
 |-------|---------|
 | `repo-sentinel` | Install and operate deterministic repository guardrails for Claude Code and Codex hooks |
+| `agentops-continuity` | Maintain local task state, compaction recovery, handoff, and verification continuity |
 
 ### makerplace-system
 
@@ -233,9 +235,11 @@ Invoke skills:
 ```
 /agentic-research:agentic-experiment-loop
 /repository-documentation:repo-docs-wiki
+/product-engineering:webqa-devtools
 /python-quality:python-quality-gate
 /python-quality:python-tdd
 /agent-harness-control:repo-sentinel
+/agent-harness-control:agentops-continuity
 /makerplace-system:marketplace-health
 /makerplace-system:feedback-makerplace
 ```
@@ -297,9 +301,9 @@ claude-makerplace/
 └── plugins/
     ├── agentic-research/   (5 skills)
     ├── cloud-delivery/     (7 skills)
-    ├── product-engineering/ (6 skills)
+    ├── product-engineering/ (7 skills)
     ├── repository-documentation/ (1 skill)
     ├── python-quality/     (2 skills, 1 agent, 1 hook)
-    ├── agent-harness-control/ (1 skill)
+    ├── agent-harness-control/ (2 skills)
     └── makerplace-system/  (4 commands, 2 agents, 1 hook)
 ```

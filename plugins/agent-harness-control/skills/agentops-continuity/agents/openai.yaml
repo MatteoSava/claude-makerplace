@@ -1,0 +1,10 @@
+version: 1
+agents:
+  - name: context-curator
+    description: Curates AgentOps continuity state and compact context essentials.
+  - name: plan-auditor
+    description: Audits objective alignment, assumptions, and next actions.
+  - name: verification-auditor
+    description: Audits verification evidence before final response.
+  - name: continuity-handoff
+    description: Produces concise handoff summaries from local state.

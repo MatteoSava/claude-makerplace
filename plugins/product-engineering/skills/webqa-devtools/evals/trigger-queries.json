@@ -1,0 +1,17 @@
+{
+  "should_trigger": [
+    "verify the login page in Chrome",
+    "debug this hydration error in the browser",
+    "check console errors on localhost:3000",
+    "run a performance trace of the dashboard",
+    "test responsive layout for the signup form",
+    "inspect network failures after submitting checkout",
+    "run an accessibility smoke check"
+  ],
+  "should_not_trigger": [
+    "write a SQL migration",
+    "summarize this backend ADR",
+    "rename this Python function",
+    "explain how DNS works"
+  ]
+}

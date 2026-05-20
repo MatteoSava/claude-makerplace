@@ -1,7 +1,7 @@
 {
   "name": "agent-harness-control",
   "version": "1.0.0",
-  "description": "Agent runtime guardrails, hook scaffolds, execpolicy rules, and repository control-plane workflows for Claude Code and Codex.",
+  "description": "Agent runtime guardrails, hook scaffolds, continuity ledgers, execpolicy rules, and repository control-plane workflows for Claude Code and Codex.",
   "author": {
     "name": "Independent Claude Makerplace"
   },
@@ -13,13 +13,16 @@
     "guardrails",
     "execpolicy",
     "repo-sentinel",
-    "agent-control"
+    "agentops-continuity",
+    "agent-control",
+    "compaction",
+    "verification"
   ],
   "skills": "./skills/",
   "interface": {
     "displayName": "Agent Harness Control",
-    "shortDescription": "Agent runtime guardrails and hook control.",
-    "longDescription": "Reusable workflows for installing and operating deterministic repository guardrails, cross-agent hooks, execpolicy rules, protected-path policy, secret scanning, and verification gates.",
+    "shortDescription": "Agent guardrails and continuity control.",
+    "longDescription": "Reusable workflows for deterministic repository guardrails, cross-agent hooks, execpolicy rules, protected-path policy, secret scanning, task state ledgers, compaction recovery, handoff, and verification gates.",
     "developerName": "Independent Claude Makerplace",
     "category": "Developer Tools",
     "capabilities": [
@@ -28,8 +31,9 @@
     ],
     "defaultPrompt": [
       "Install Repo Sentinel guardrails.",
+      "Set up AgentOps continuity for this repo.",
       "Debug this Repo Sentinel hook block.",
-      "Tune repository agent safety policy."
+      "Recover context after compaction."
     ],
     "brandColor": "#7C3AED"
   }

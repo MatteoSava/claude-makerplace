@@ -684,6 +684,52 @@ def run_repo_sentinel_smoke() -> None:
     print("repo-sentinel-smoke-ok")
 
 
+def run_webqa_devtools_smoke() -> None:
+    completed = subprocess.run(
+        [
+            "uv",
+            "run",
+            "--with",
+            "pytest==9.0.3",
+            "pytest",
+            "-q",
+            "plugins/product-engineering/skills/webqa-devtools/tests",
+        ],
+        cwd=ROOT,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        timeout=120,
+    )
+    print(completed.stdout.strip())
+    if completed.returncode != 0:
+        fail("webqa devtools smoke tests failed")
+    print("webqa-devtools-smoke-ok")
+
+
+def run_agentops_continuity_smoke() -> None:
+    completed = subprocess.run(
+        [
+            "uv",
+            "run",
+            "--with",
+            "pytest==9.0.3",
+            "pytest",
+            "-q",
+            "plugins/agent-harness-control/skills/agentops-continuity/tests",
+        ],
+        cwd=ROOT,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        timeout=120,
+    )
+    print(completed.stdout.strip())
+    if completed.returncode != 0:
+        fail("agentops continuity smoke tests failed")
+    print("agentops-continuity-smoke-ok")
+
+
 def run_feedback_sender_smoke() -> None:
     target = PLUGINS / "makerplace-system" / "scripts" / "send-feedback.sh"
     completed = subprocess.run(
@@ -766,6 +812,8 @@ def main() -> int:
     run_python_hook_smoke()
     run_repo_docs_hook_smoke()
     run_repo_sentinel_smoke()
+    run_webqa_devtools_smoke()
+    run_agentops_continuity_smoke()
     run_feedback_sender_smoke()
     return 0
 

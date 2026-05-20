@@ -1,0 +1,163 @@
+{
+  "schema_version": "1.0",
+  "context_injection": {
+    "enabled": true,
+    "on_session_start": true,
+    "on_user_prompt": true,
+    "on_post_tool_batch": true,
+    "max_chars": 7000,
+    "ledger_tail_lines": 40,
+    "decision_tail_lines": 18,
+    "risk_tail_lines": 18,
+    "next_tail_lines": 18
+  },
+  "prompt_tracking": {
+    "auto_create_task_on_prompt": true,
+    "verification_required_keywords": [
+      "implement",
+      "create",
+      "build",
+      "fix",
+      "repair",
+      "refactor",
+      "change",
+      "modify",
+      "edit",
+      "add",
+      "delete",
+      "remove",
+      "migrate",
+      "update",
+      "test"
+    ],
+    "ignore_prompt_regexes": [
+      "^/help\\b",
+      "^/status\\b",
+      "^/hooks\\b",
+      "^/skills\\b"
+    ]
+  },
+  "compaction": {
+    "snapshot_before_compact": true,
+    "block_manual_compact_if_missing_current_task": false,
+    "update_ledger_after_compact": true,
+    "max_summary_chars": 12000,
+    "max_snapshots": 24
+  },
+  "stop_gate": {
+    "enabled": true,
+    "allow_when_stop_hook_active": true,
+    "block_when_verification_required": true,
+    "block_when_pending_next_actions": false,
+    "required_verification_statuses": [
+      "passed",
+      "not-applicable",
+      "skipped-with-reason",
+      "manual-review"
+    ],
+    "max_block_count_per_task": 6,
+    "override_file": "state/allow-stop.once"
+  },
+  "tracking": {
+    "exclude_path_patterns": [
+      ".git/**",
+      ".agentops-continuity/**",
+      ".claude/**",
+      ".codex/**",
+      ".agents/**",
+      "node_modules/**",
+      ".venv/**",
+      "venv/**",
+      "dist/**",
+      "build/**",
+      "coverage/**",
+      ".pytest_cache/**",
+      ".mypy_cache/**",
+      ".ruff_cache/**"
+    ],
+    "verification_required_path_patterns": [
+      "*.py",
+      "*.pyi",
+      "*.js",
+      "*.jsx",
+      "*.ts",
+      "*.tsx",
+      "*.go",
+      "*.rs",
+      "*.java",
+      "*.kt",
+      "*.scala",
+      "*.cs",
+      "*.rb",
+      "*.php",
+      "*.swift",
+      "*.c",
+      "*.cpp",
+      "*.h",
+      "*.hpp",
+      "*.tf",
+      "*.tfvars",
+      "*.yaml",
+      "*.yml",
+      "*.toml",
+      "*.json",
+      "*.sql",
+      "Dockerfile",
+      "docker-compose*.yml",
+      "package.json",
+      "pyproject.toml",
+      "requirements*.txt",
+      "poetry.lock",
+      "uv.lock",
+      "Pipfile",
+      "Cargo.toml",
+      "go.mod",
+      "pom.xml",
+      "build.gradle*"
+    ]
+  },
+  "verification_detection": {
+    "command_regexes": [
+      "\\bpytest\\b",
+      "\\bpython\\s+-m\\s+pytest\\b",
+      "\\bnpm\\s+(run\\s+)?test\\b",
+      "\\bpnpm\\s+(run\\s+)?test\\b",
+      "\\byarn\\s+test\\b",
+      "\\bvitest\\b",
+      "\\bjest\\b",
+      "\\bgo\\s+test\\b",
+      "\\bcargo\\s+test\\b",
+      "\\bmvn\\s+test\\b",
+      "\\bgradle\\s+test\\b",
+      "\\bmake\\s+test\\b",
+      "\\btox\\b",
+      "\\bnox\\b",
+      "\\bruff\\s+check\\b",
+      "\\bmypy\\b",
+      "\\beslint\\b",
+      "\\btsc\\b",
+      "\\bterraform\\s+plan\\b",
+      "\\bterraform\\s+validate\\b",
+      "\\btofu\\s+plan\\b",
+      "\\bkubectl\\s+diff\\b",
+      "\\bhelm\\s+lint\\b"
+    ],
+    "ignore_success_if_command_contains": [
+      "|| true",
+      "; true",
+      "--help",
+      "--version"
+    ]
+  },
+  "pretool_guard": {
+    "enabled": true,
+    "deny_commands_regexes": [
+      "\\brm\\s+-rf\\s+\\.agentops-continuity\\b",
+      "\\brm\\s+-rf\\s+\\.claude\\b.*agentops",
+      "\\brm\\s+-rf\\s+\\.codex\\b.*agentops",
+      "\\bmv\\s+\\.agentops-continuity\\b",
+      "\\bchmod\\s+-R\\s+777\\s+\\.agentops-continuity\\b"
+    ],
+    "deny_reason": "AgentOps Continuity state/hook files should not be removed by an agentic tool call. Edit policy.json or uninstall intentionally outside the agent loop."
+  }
+}

@@ -1,0 +1,118 @@
+{
+  "project_url": "http://localhost:3000",
+  "candidate_project_urls": [
+    "http://localhost:3000",
+    "http://localhost:5173",
+    "http://localhost:5174",
+    "http://localhost:4200",
+    "http://localhost:8080",
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:5173"
+  ],
+  "frontend_file_globs": [
+    "**/*.html",
+    "**/*.css",
+    "**/*.scss",
+    "**/*.sass",
+    "**/*.less",
+    "**/*.js",
+    "**/*.jsx",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.mjs",
+    "**/*.cjs",
+    "**/*.vue",
+    "**/*.svelte",
+    "**/*.astro",
+    "app/**",
+    "src/**",
+    "pages/**",
+    "components/**",
+    "routes/**",
+    "public/**",
+    "static/**",
+    "vite.config.*",
+    "next.config.*",
+    "nuxt.config.*",
+    "svelte.config.*",
+    "astro.config.*",
+    "tailwind.config.*"
+  ],
+  "frontend_exclude_globs": [
+    "**/node_modules/**",
+    "**/.next/**",
+    "**/.nuxt/**",
+    "**/dist/**",
+    "**/build/**",
+    "**/coverage/**",
+    "**/.venv/**",
+    "**/venv/**",
+    "**/__pycache__/**",
+    "**/.git/**",
+    "**/*.test.*",
+    "**/*.spec.*",
+    "**/*.stories.*",
+    "**/generated/**"
+  ],
+  "require_browser_evidence_after_frontend_changes": true,
+  "require_test_or_build_after_frontend_changes": false,
+  "minimum_browser_evidence_categories": [
+    "dom_or_visual",
+    "runtime"
+  ],
+  "browser_evidence_tools": {
+    "dom_or_visual": [
+      "take_snapshot",
+      "take_screenshot",
+      "lighthouse_audit"
+    ],
+    "runtime": [
+      "list_console_messages",
+      "get_console_message",
+      "evaluate_script"
+    ],
+    "network": [
+      "list_network_requests",
+      "get_network_request"
+    ],
+    "performance": [
+      "performance_start_trace",
+      "performance_stop_trace",
+      "performance_analyze_insight"
+    ],
+    "accessibility": [
+      "lighthouse_audit",
+      "take_snapshot"
+    ]
+  },
+  "verification_command_regexes": [
+    "(^|&&|;)\\s*(npm|pnpm|yarn|bun)\\s+(run\\s+)?(test|build|lint|check|typecheck|e2e|playwright|cypress)",
+    "(^|&&|;)\\s*npx\\s+(playwright|cypress|vitest)",
+    "(^|&&|;)\\s*pytest(\\s|$)",
+    "(^|&&|;)\\s*python\\s+-m\\s+pytest(\\s|$)"
+  ],
+  "allow_external_urls": false,
+  "allowed_url_prefixes": [
+    "http://localhost",
+    "https://localhost",
+    "http://127.0.0.1",
+    "https://127.0.0.1",
+    "http://0.0.0.0"
+  ],
+  "blocked_url_regexes": [
+    "https?://[^/]*(prod|production|admin|bank|payments|stripe|paypal)[^/]*"
+  ],
+  "allow_sensitive_headers": false,
+  "restrict_artifact_paths": true,
+  "allowed_artifact_dirs": [
+    ".webqa-devtools/reports",
+    ".webqa-devtools/artifacts",
+    "test-results",
+    "playwright-report",
+    "tmp",
+    "artifacts"
+  ],
+  "redact_patterns": [
+    "(?i)(api[_-]?key|authorization|bearer|password|passwd|secret|token|cookie|session)[=:]\\s*[^\\s,;]+"
+  ]
+}

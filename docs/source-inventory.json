@@ -105,6 +105,13 @@
     "decision": "candidate"
   },
   {
+    "name": "webqa-devtools",
+    "plugin": "product-engineering",
+    "type": "skill",
+    "path": "plugins/product-engineering/skills/webqa-devtools/SKILL.md",
+    "decision": "candidate"
+  },
+  {
     "name": "telegram-miniapp-feature",
     "plugin": "product-engineering",
     "type": "skill",
@@ -151,6 +158,13 @@
     "plugin": "agent-harness-control",
     "type": "skill",
     "path": "plugins/agent-harness-control/skills/repo-sentinel/SKILL.md",
+    "decision": "candidate"
+  },
+  {
+    "name": "agentops-continuity",
+    "plugin": "agent-harness-control",
+    "type": "skill",
+    "path": "plugins/agent-harness-control/skills/agentops-continuity/SKILL.md",
     "decision": "candidate"
   }
 ]

@@ -1,7 +1,7 @@
 {
   "name": "product-engineering",
   "version": "1.0.0",
-  "description": "Skills for full-stack product work across React, ASP.NET-style APIs, streaming, Playwright validation, mini-apps, and wallet integrations.",
+  "description": "Skills for full-stack product work across React, ASP.NET-style APIs, streaming, Playwright and Chrome DevTools validation, mini-apps, and wallet integrations.",
   "author": {
     "name": "Independent Claude Makerplace"
   },
@@ -13,13 +13,15 @@
     "react",
     "api",
     "playwright",
+    "chrome-devtools",
+    "browser-qa",
     "full-stack"
   ],
   "skills": "./skills/",
   "interface": {
     "displayName": "Product Engineering",
     "shortDescription": "Full-stack product implementation workflows.",
-    "longDescription": "Reusable skills for React and TypeScript standards, SSE chat streaming, Playwright UI validation, Telegram Mini Apps, TON wallet integration, and intent system extension.",
+    "longDescription": "Reusable skills for React and TypeScript standards, SSE chat streaming, Playwright UI validation, Chrome DevTools browser QA, Telegram Mini Apps, TON wallet integration, and intent system extension.",
     "developerName": "Independent Claude Makerplace",
     "category": "Developer Tools",
     "capabilities": [
@@ -29,6 +31,7 @@
     "defaultPrompt": [
       "Build this React feature.",
       "Validate this UI with Playwright.",
+      "Debug this UI with Chrome DevTools.",
       "Add an SSE chat stream."
     ],
     "brandColor": "#7C3AED",

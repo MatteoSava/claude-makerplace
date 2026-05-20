@@ -1,7 +1,7 @@
 {
   "name": "agentic-research",
   "version": "1.0.0",
-  "description": "Skills for self-improving agents, benchmark loops, experiment registries, trace continuity, and score-model investigation.",
+  "description": "Skills for self-improving agents, benchmark loops, experiment registries, and score-model investigation.",
   "author": {
     "name": "Independent Claude Makerplace"
   },

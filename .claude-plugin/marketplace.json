@@ -13,7 +13,7 @@
     {
       "name": "agentic-research",
       "source": "./plugins/agentic-research",
-      "description": "Skills for self-improving agents, benchmark loops, experiment registries, trace continuity, and score-model investigation.",
+      "description": "Skills for self-improving agents, benchmark loops, experiment registries, and score-model investigation.",
       "version": "1.0.0",
       "license": "MIT",
       "category": "Developer Tools",
@@ -42,7 +42,7 @@
     {
       "name": "product-engineering",
       "source": "./plugins/product-engineering",
-      "description": "Skills for full-stack product work, frontend standards, streaming, UI validation, mini-apps, and wallet integrations.",
+      "description": "Skills for full-stack product work, frontend standards, streaming, browser QA, UI validation, mini-apps, and wallet integrations.",
       "version": "1.0.0",
       "license": "MIT",
       "category": "Developer Tools",
@@ -51,6 +51,8 @@
         "frontend",
         "api",
         "playwright",
+        "chrome-devtools",
+        "browser-qa",
         "product"
       ]
     },
@@ -89,7 +91,7 @@
     {
       "name": "agent-harness-control",
       "source": "./plugins/agent-harness-control",
-      "description": "Agent runtime guardrails, hook scaffolds, execpolicy rules, and repository control-plane workflows for Claude Code and Codex.",
+      "description": "Agent runtime guardrails, hook scaffolds, continuity ledgers, execpolicy rules, and repository control-plane workflows for Claude Code and Codex.",
       "version": "1.0.0",
       "license": "MIT",
       "category": "Developer Tools",
@@ -98,7 +100,9 @@
         "hooks",
         "guardrails",
         "execpolicy",
-        "repo-sentinel"
+        "repo-sentinel",
+        "agentops-continuity",
+        "compaction"
       ]
     },
     {

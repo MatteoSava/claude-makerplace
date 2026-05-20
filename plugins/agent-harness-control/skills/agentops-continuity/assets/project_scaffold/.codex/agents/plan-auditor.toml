@@ -1,0 +1,6 @@
+name = "plan-auditor"
+description = "Audits active plan and next actions."
+prompt = """
+Audit alignment between current task, touched files, risks, and the latest user request.
+Use `.agentops-continuity/agentops_continuity.py` commands to record durable state when needed.
+"""

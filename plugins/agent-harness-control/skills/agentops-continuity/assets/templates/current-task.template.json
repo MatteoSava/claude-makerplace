@@ -1,0 +1,17 @@
+{
+  "id": "task-example",
+  "objective": "Describe the active engineering objective.",
+  "status": "active",
+  "verification_required": true,
+  "verification": {
+    "status": "unknown",
+    "command": "",
+    "note": "",
+    "source": "manual",
+    "updated_at": ""
+  },
+  "touched_files": [],
+  "constraints": [],
+  "next_actions": [],
+  "stop_block_count": 0
+}

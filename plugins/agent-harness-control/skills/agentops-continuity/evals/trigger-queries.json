@@ -1,0 +1,14 @@
+{
+  "explicit": [
+    "Use agentops-continuity for this long refactor",
+    "Create a task ledger and keep state across compaction",
+    "Before final answer, enforce verification status",
+    "Record this architecture decision and open risk",
+    "Recover state after /compact"
+  ],
+  "implicit": [
+    "We will work on this repo for a while; keep track of touched files and decisions",
+    "This may run across multiple sessions; don't lose context",
+    "Make sure the agent does not finish before running tests"
+  ]
+}

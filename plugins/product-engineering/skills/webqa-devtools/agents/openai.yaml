@@ -1,0 +1,16 @@
+# Optional Codex/OpenAI agent definitions for teams that mirror Claude-style subagents.
+agents:
+  ui-smoke-verifier:
+    description: Verify a web UI route or flow in Chrome with MCP evidence.
+  browser-debugger:
+    description: Reproduce browser-only failures and isolate root cause from console/network/DOM evidence.
+  network-root-cause:
+    description: Diagnose failing browser network requests, CORS, auth, API contract, and asset issues.
+  performance-tracer:
+    description: Run and interpret Chrome DevTools performance traces.
+  a11y-inspector:
+    description: Inspect accessibility via snapshots, keyboard path, and Lighthouse.
+  visual-regression-reviewer:
+    description: Review screenshots/responsive states for visual regressions.
+  browser-privacy-guardian:
+    description: Prevent unsafe URLs, secret leakage, sensitive screenshots, and production data exposure.

@@ -1,0 +1,67 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|clear",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python .webqa-devtools/webqa_devtools.py hook",
+            "timeout": 15,
+            "statusMessage": "Loading WebQA DevTools state"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python .webqa-devtools/webqa_devtools.py hook",
+            "timeout": 15,
+            "statusMessage": "Injecting WebQA context"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "^Bash$|^apply_patch$|^mcp__chrome-devtools__.*|^mcp__chrome_devtools__.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python .webqa-devtools/webqa_devtools.py hook",
+            "timeout": 15,
+            "statusMessage": "Checking WebQA browser policy"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "^Bash$|^apply_patch$|^mcp__chrome-devtools__.*|^mcp__chrome_devtools__.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python .webqa-devtools/webqa_devtools.py hook",
+            "timeout": 15,
+            "statusMessage": "Recording WebQA evidence"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python .webqa-devtools/webqa_devtools.py hook",
+            "timeout": 15,
+            "statusMessage": "Checking WebQA stop gate"
+          }
+        ]
+      }
+    ]
+  }
+}
