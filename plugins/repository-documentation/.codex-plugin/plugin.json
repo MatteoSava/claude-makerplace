@@ -31,6 +31,8 @@
       "Update docs from this diff.",
       "Lint the repository documentation."
     ],
-    "brandColor": "#0F766E"
+    "brandColor": "#0F766E",
+    "composerIcon": "./assets/icon.png",
+    "logo": "./assets/icon.png"
   }
 }

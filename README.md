@@ -145,6 +145,7 @@ Codex uses a parallel marketplace and per-plugin manifests:
 
 - marketplace: `.agents/plugins/marketplace.json`
 - plugin manifests: `plugins/*/.codex-plugin/plugin.json`
+- plugin icons: `plugins/*/assets/icon.png`, referenced as `interface.composerIcon` and `interface.logo`
 - plugin hooks: `plugins/*/hooks/hooks.json` command hooks can run when Codex plugin hooks are enabled and trusted
 - project hooks: `.codex/hooks.json` can register project-local command hooks; enable them through `.codex/config.toml`
 

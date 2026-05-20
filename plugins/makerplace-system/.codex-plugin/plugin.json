@@ -28,6 +28,8 @@
       "Prepare release readiness notes.",
       "Collect plugin feedback."
     ],
-    "brandColor": "#475569"
+    "brandColor": "#475569",
+    "composerIcon": "./assets/icon.png",
+    "logo": "./assets/icon.png"
   }
 }

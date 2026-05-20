@@ -34,6 +34,8 @@
       "Fix this Python validation failure.",
       "Review Python test coverage."
     ],
-    "brandColor": "#16A34A"
+    "brandColor": "#16A34A",
+    "composerIcon": "./assets/icon.png",
+    "logo": "./assets/icon.png"
   }
 }

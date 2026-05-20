@@ -11,6 +11,7 @@ import argparse
 import json
 import subprocess
 from pathlib import Path
+from typing import Any
 
 
 def run_git(args: list[str], root: Path) -> str | None:
@@ -22,14 +23,17 @@ def run_git(args: list[str], root: Path) -> str | None:
         return None
 
 
-def load_state(docs: Path) -> dict:
+def load_state(docs: Path) -> dict[str, str]:
     p = docs / "_meta" / "state.json"
     if not p.exists():
         return {}
     try:
-        return json.loads(p.read_text(encoding="utf-8"))
+        data: Any = json.loads(p.read_text(encoding="utf-8"))
     except Exception:
         return {}
+    if not isinstance(data, dict):
+        return {}
+    return {str(key): value for key, value in data.items() if isinstance(value, str)}
 
 
 def main() -> int:
@@ -52,14 +56,14 @@ def main() -> int:
         or state.get("last_bootstrap_commit")
     )
 
-    result = {"repo_root": str(root), "base": base, "head": head, "changes": []}
-
     if base and head:
         out = run_git(["diff", "--name-status", f"{base}..{head}"], root) or ""
-        result["changes"] = [line for line in out.splitlines() if line.strip()]
+        changes = [line for line in out.splitlines() if line.strip()]
     else:
         out = run_git(["status", "--short"], root) or ""
-        result["changes"] = [line for line in out.splitlines() if line.strip()]
+        changes = [line for line in out.splitlines() if line.strip()]
+
+    result = {"repo_root": str(root), "base": base, "head": head, "changes": changes}
 
     if args.json:
         print(json.dumps(result, indent=2))
@@ -68,8 +72,8 @@ def main() -> int:
         print(f"base: {base or '[none]'}")
         print(f"head: {head or '[none]'}")
         print("changes:")
-        if result["changes"]:
-            for line in result["changes"]:
+        if changes:
+            for line in changes:
                 print(f"  {line}")
         else:
             print("  [none]")
