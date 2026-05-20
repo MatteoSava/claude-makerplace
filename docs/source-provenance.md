@@ -9,8 +9,8 @@ identifiers.
 - 23 skills under `plugins/*/skills/*/SKILL.md`
 - 4 commands under `plugins/makerplace-system/commands`
 - 3 Claude Code plugin agents under `plugins/*/agents`
-- 2 Claude Code hook definitions under `plugins/*/hooks`
-- Codex marketplace and plugin manifests
+- 3 runtime hook definitions under `plugins/*/hooks`
+- Codex marketplace and plugin manifests, with command hooks loaded from plugin hook directories when enabled
 - OpenCode config, runtime plugin, skills links, commands links, and adapter agents
 
 ## Provenance Rule

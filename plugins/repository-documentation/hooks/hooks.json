@@ -1,0 +1,14 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run python \"${CLAUDE_PLUGIN_ROOT}/scripts/repo-docs-wiki-stop-hook.py\""
+          }
+        ]
+      }
+    ]
+  }
+}

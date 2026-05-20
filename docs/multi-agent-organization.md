@@ -24,5 +24,5 @@ of a single large instruction file.
 | Surface | Source |
 |---|---|
 | Claude Code | `.claude-plugin/marketplace.json`, `plugins/*/.claude-plugin/plugin.json`, plugin-local `skills/`, `commands/`, `agents/`, `hooks/` |
-| Codex | `.agents/plugins/marketplace.json`, `plugins/*/.codex-plugin/plugin.json` |
+| Codex | `.agents/plugins/marketplace.json`, `plugins/*/.codex-plugin/plugin.json`, plugin-local command hooks when enabled, optional project `.codex/hooks.json` |
 | OpenCode | `opencode.json`, `.opencode/plugins/claude-makerplace.js`, `.opencode/skills`, `.opencode/commands`, `.opencode/agents` |

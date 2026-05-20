@@ -106,6 +106,12 @@ Use scripts only at the points called out in the operating modes below:
 | `scripts/check_docs_wiki.py` | Before finishing larger docs work or when the user asks for a health check | Broader deterministic health report; still perform semantic source verification manually |
 | `scripts/build_llms_index.py` | User asks for `llms.txt`, compact agent context, or LLM routing | Generates or prints `docs/llms.txt` from page frontmatter |
 
+## Runtime Stop hook
+
+The plugin also ships a command Stop hook. When supported by the host agent and enabled/trusted, the hook runs after a turn only if `docs/` files changed and `docs/_meta/schema.md` identifies a repo-docs wiki. It refreshes `docs/index.md` when safe, then runs `docs_wiki_lint.py` and `check_docs_wiki.py --strict`.
+
+Do not rely on the hook for semantic source verification, bootstrapping, or fleet mapping. Those remain explicit skill workflows. Treat hook failures as unfinished docs work and fix them before reporting completion.
+
 ## Operating modes
 
 ### 1. Bootstrap

@@ -373,11 +373,31 @@ def validate_selection_map() -> None:
 def validate_hooks() -> None:
     hook_files = sorted(PLUGINS.glob("*/hooks/hooks.json"))
     if not hook_files:
-        fail("PostToolUse hooks are missing")
+        fail("runtime hooks are missing")
     for hook_file in hook_files:
         hooks = json.loads(hook_file.read_text())
-        if "hooks" not in hooks or "PostToolUse" not in hooks["hooks"]:
-            fail(f"{hook_file}: PostToolUse hooks are missing")
+        if "hooks" not in hooks:
+            fail(f"{hook_file}: hooks object is missing")
+        declared_events = set(hooks["hooks"])
+        if not declared_events & {"PreToolUse", "PostToolUse", "Stop"}:
+            fail(f"{hook_file}: no supported runtime hook events are declared")
+        for event_name, entries in hooks["hooks"].items():
+            if event_name not in {
+                "PreToolUse",
+                "PostToolUse",
+                "SessionStart",
+                "UserPromptSubmit",
+                "Stop",
+            }:
+                fail(f"{hook_file}: unsupported hook event for Codex: {event_name}")
+            if not isinstance(entries, list):
+                fail(f"{hook_file}: {event_name} hook entries should be a list")
+            for entry in entries:
+                for hook in entry.get("hooks", []):
+                    if hook.get("type") != "command":
+                        fail(f"{hook_file}: {event_name} should use command hooks")
+                    if not hook.get("command"):
+                        fail(f"{hook_file}: {event_name} command is missing")
 
     python_hooks = json.loads(
         (PLUGINS / "python-quality" / "hooks" / "hooks.json").read_text()
@@ -408,6 +428,10 @@ def validate_hooks() -> None:
         PLUGINS / "makerplace-system" / "scripts" / "makerplace-guard.sh",
         PLUGINS / "makerplace-system" / "scripts" / "send-feedback.sh",
         PLUGINS / "python-quality" / "scripts" / "python-quality-hook.py",
+        PLUGINS
+        / "repository-documentation"
+        / "scripts"
+        / "repo-docs-wiki-stop-hook.py",
     ]
     for path in scripts:
         if not path.exists():
@@ -416,6 +440,25 @@ def validate_hooks() -> None:
         mode = path.stat().st_mode
         if path.suffix == ".sh" and not mode & stat.S_IXUSR:
             fail(f"{path.name} is not executable")
+
+    repo_docs_hooks_path = PLUGINS / "repository-documentation" / "hooks" / "hooks.json"
+    if not repo_docs_hooks_path.exists():
+        fail("repository-documentation should declare a repo-docs Stop hook")
+    repo_docs_hooks = json.loads(repo_docs_hooks_path.read_text())["hooks"]
+    repo_docs_stop = repo_docs_hooks.get("Stop", [])
+    if len(repo_docs_stop) != 1:
+        fail("repository-documentation should declare one Stop hook")
+    repo_docs_command_hooks = [
+        hook
+        for entry in repo_docs_stop
+        for hook in entry.get("hooks", [])
+        if hook.get("type") == "command"
+    ]
+    if len(repo_docs_command_hooks) != 1:
+        fail("repository-documentation Stop should declare one command hook")
+    repo_docs_command = repo_docs_command_hooks[0].get("command", "")
+    if "repo-docs-wiki-stop-hook.py" not in repo_docs_command:
+        fail("repository-documentation Stop should run repo-docs-wiki-stop-hook.py")
 
     print("hooks-ok")
 
@@ -520,6 +563,104 @@ def run_python_hook_smoke() -> None:
     print("python-hook-smoke-ok")
 
 
+def repo_docs_page(title: str, typ: str, summary: str) -> str:
+    return f"""---
+title: {title}
+type: {typ}
+summary: {summary}
+tags: [docs-wiki]
+source_refs: []
+status: draft
+updated: 2026-01-01
+---
+
+# {title}
+
+{summary}
+"""
+
+
+def run_repo_docs_hook_smoke() -> None:
+    target = (
+        PLUGINS / "repository-documentation" / "scripts" / "repo-docs-wiki-stop-hook.py"
+    )
+    with tempfile.TemporaryDirectory(prefix="makerplace-repo-docs-hook-") as temp_name:
+        temp = Path(temp_name)
+        subprocess.run(
+            ["git", "init", "-q"],
+            cwd=temp,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+            timeout=30,
+            check=True,
+        )
+        docs = temp / "docs"
+        (docs / "_meta").mkdir(parents=True)
+        (docs / "architecture").mkdir()
+        (docs / "_meta" / "schema.md").write_text(
+            repo_docs_page(
+                "Repo Docs Wiki Schema",
+                "meta",
+                "Defines the local docs-wiki conventions.",
+            ),
+            encoding="utf-8",
+        )
+        (docs / "_meta" / "log.md").write_text(
+            repo_docs_page(
+                "Repo Docs Wiki Log",
+                "meta",
+                "Records docs-wiki maintenance events.",
+            ),
+            encoding="utf-8",
+        )
+        (docs / "index.md").write_text(
+            repo_docs_page(
+                "Documentation Index",
+                "index",
+                "Catalog of the repository documentation wiki.",
+            ),
+            encoding="utf-8",
+        )
+        (docs / "architecture" / "overview.md").write_text(
+            repo_docs_page(
+                "Architecture Overview",
+                "architecture",
+                "Describes the system architecture.",
+            ),
+            encoding="utf-8",
+        )
+
+        payload = json.dumps(
+            {
+                "hook_event_name": "Stop",
+                "cwd": str(temp),
+                "stop_hook_active": False,
+            }
+        )
+        completed = subprocess.run(
+            ["uv", "run", "python", str(target)],
+            cwd=ROOT,
+            input=payload,
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            timeout=240,
+        )
+        print(completed.stdout.strip())
+        if completed.returncode != 0:
+            fail("repo docs Stop hook smoke test failed")
+        output = completed.stdout.strip()
+        if "Repo docs wiki Stop hook ran" not in output:
+            fail("repo docs Stop hook should report changed docs work")
+        index = (docs / "index.md").read_text(encoding="utf-8")
+        if "architecture/overview.md" not in index:
+            fail("repo docs Stop hook should refresh docs/index.md")
+        if '"decision": "block"' in output:
+            fail("repo docs Stop hook should not block a valid docs wiki")
+    print("repo-docs-hook-smoke-ok")
+
+
 def run_feedback_sender_smoke() -> None:
     target = PLUGINS / "makerplace-system" / "scripts" / "send-feedback.sh"
     completed = subprocess.run(
@@ -600,6 +741,7 @@ def main() -> int:
     validate_no_leaks()
     run_claude_validation_if_available()
     run_python_hook_smoke()
+    run_repo_docs_hook_smoke()
     run_feedback_sender_smoke()
     return 0
 

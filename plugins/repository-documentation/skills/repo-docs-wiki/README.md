@@ -101,6 +101,19 @@ uv run python "${CLAUDE_SKILL_DIR}/scripts/build_llms_index.py" --docs docs --wr
 
 Scripts are helpers. The agent should still inspect relevant source files and make narrow, source-grounded edits.
 
+## Stop Hook
+
+The `repository-documentation` plugin ships a Stop hook for agents that support plugin command hooks. The hook runs only when `docs/` files changed and the repo already has `docs/_meta/schema.md` for a repo-docs wiki.
+
+The hook:
+
+- refreshes `docs/index.md` when the index appears docs-wiki generated or missing;
+- runs `docs_wiki_lint.py`;
+- runs `check_docs_wiki.py --strict`;
+- reports results back to the agent and blocks completion on deterministic high-severity failures.
+
+The hook does not launch subagents, bootstrap new docs, or perform broad repo mapping. Use the explicit Fleet Map And Fill workflow for that work.
+
 ## Fleet Map And Fill
 
 For broad documentation requests, the skill can coordinate a subagent fleet:

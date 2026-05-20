@@ -22,7 +22,7 @@
     },
     {
       "type": "hooks",
-      "count": 2,
+      "count": 3,
       "source": "curated-public-package",
       "notes": "Hook definitions are stored under plugin hooks directories."
     },

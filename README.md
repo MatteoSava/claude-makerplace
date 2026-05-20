@@ -36,7 +36,7 @@ baseline → bounded variant → reproducible run → score/trace review → pro
 
 ## Plugins
 
-The marketplace contains 23 skills across 6 plugins, plus 4 slash commands, 3 Claude Code subagents, 4 OpenCode adapter agents, and 2 runtime hooks.
+The marketplace contains 23 skills across 6 plugins, plus 4 slash commands, 3 Claude Code subagents, 4 OpenCode adapter agents, and 3 runtime hooks.
 
 ### agentic-research
 
@@ -86,6 +86,8 @@ Source-grounded repository documentation workflows.
 | Skill | Purpose |
 |-------|---------|
 | `repo-docs-wiki` | Build, ingest, query, lint, and repair source-grounded docs/ wikis and LLM-readable indexes |
+
+**Hook:** Runs on Stop after docs-wiki files change. It refreshes the docs index when safe, then runs deterministic docs-wiki lint and health checks. Broad repo mapping and subagent fleets remain explicit skill workflows, not hook-triggered background work.
 
 ### python-quality
 
@@ -143,6 +145,8 @@ Codex uses a parallel marketplace and per-plugin manifests:
 
 - marketplace: `.agents/plugins/marketplace.json`
 - plugin manifests: `plugins/*/.codex-plugin/plugin.json`
+- plugin hooks: `plugins/*/hooks/hooks.json` command hooks can run when Codex plugin hooks are enabled and trusted
+- project hooks: `.codex/hooks.json` can register project-local command hooks; enable them through `.codex/config.toml`
 
 OpenCode uses a project-local adapter:
 
@@ -199,7 +203,7 @@ The CI workflow and local validation use the same entrypoint:
 ./bin/makerplace-validate
 ```
 
-This checks: JSON validity, Claude and Codex plugin manifest conventions, OpenCode adapter links, skill frontmatter, README consistency, selection map coverage, hook scripts, executable permissions, privacy leak markers, Claude plugin validation (when available), Python hook smoke tests, and feedback sender behavior.
+This checks: JSON validity, Claude and Codex plugin manifest conventions, OpenCode adapter links, skill frontmatter, README consistency, selection map coverage, hook scripts, executable permissions, privacy leak markers, Claude plugin validation (when available), Python and repo-docs hook smoke tests, and feedback sender behavior.
 
 ## Install
 
@@ -244,6 +248,14 @@ product-engineering
 repository-documentation
 python-quality
 makerplace-system
+```
+
+Codex can run marketplace plugin hooks from each plugin's `hooks/hooks.json` when plugin hooks are enabled and the hook command is trusted. For project-local hooks, use `.codex/hooks.json` plus:
+
+```toml
+[features]
+hooks = true
+plugin_hooks = true
 ```
 
 ### OpenCode
