@@ -5,7 +5,8 @@
   "type": "module",
   "license": "MIT",
   "exports": {
-    ".": "./opencode-plugin/index.js"
+    ".": "./opencode-plugin/index.js",
+    "./server": "./opencode-plugin/index.js"
   },
   "files": [
     "opencode-plugin",
