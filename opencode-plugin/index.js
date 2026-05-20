@@ -221,7 +221,7 @@ async function registerCommands(config) {
   }
 }
 
-function registerSkillsPath(config, input, options) {
+async function registerSkillsPath(config, input, options) {
   const workspaceRoot = path.resolve(input.worktree ?? input.directory ?? "");
   const packageWorkspace = workspaceRoot === PACKAGE_ROOT;
   if (packageWorkspace && options.forcePackageSkills !== true) {
@@ -232,7 +232,21 @@ function registerSkillsPath(config, input, options) {
   config.skills.paths = Array.isArray(config.skills.paths)
     ? config.skills.paths
     : [];
-  addUnique(config.skills.paths, PLUGINS_ROOT);
+
+  // Register each plugin's skills/ subdirectory so OpenCode discovers
+  // skills at the expected depth (<path>/<skill-name>/SKILL.md) rather
+  // than the nested plugins/<plugin>/skills/<skill>/SKILL.md layout.
+  if (existsSync(PLUGINS_ROOT)) {
+    const entries = await readdir(PLUGINS_ROOT, { withFileTypes: true });
+    for (const entry of entries) {
+      if (entry.isDirectory()) {
+        const skillsDir = path.join(PLUGINS_ROOT, entry.name, "skills");
+        if (existsSync(skillsDir)) {
+          addUnique(config.skills.paths, skillsDir);
+        }
+      }
+    }
+  }
 }
 
 function registerChromeDevtoolsMcp(config, options) {
@@ -253,7 +267,7 @@ function registerChromeDevtoolsMcp(config, options) {
 }
 
 async function configureOpenCode(config, input, options) {
-  registerSkillsPath(config, input, options);
+  await registerSkillsPath(config, input, options);
   await registerAgents(config);
   await registerCommands(config);
   registerChromeDevtoolsMcp(config, options);

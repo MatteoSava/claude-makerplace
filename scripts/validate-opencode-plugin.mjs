@@ -22,7 +22,7 @@ assert.equal(typeof hooks["experimental.session.compacting"], "function");
 const config = {};
 await hooks.config(config);
 
-assert.ok(config.skills.paths.some((item) => item.endsWith("/plugins")));
+assert.ok(config.skills.paths.some((item) => item.includes("/plugins/") && item.endsWith("/skills")));
 assert.ok(config.command["marketplace-health"].template.includes("Audit this"));
 assert.ok(config.command["feedback-makerplace"].description.includes("feedback"));
 assert.ok(config.agent["makerplace-lead"].prompt.includes("lead agent"));
