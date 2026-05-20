@@ -6,6 +6,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT / "assets" / "project_scaffold" / ".repo-sentinel" / "repo_sentinel.py"
+INSTALLER = ROOT / "scripts" / "install.py"
 
 spec = importlib.util.spec_from_file_location("repo_sentinel", SCRIPT)
 assert spec is not None
@@ -75,3 +76,23 @@ def test_patch_path_extraction(tmp_path):
     patch = "*** Begin Patch\n*** Update File: src/app.py\n@@\n-x\n+y\n*** End Patch"
     paths = rs.extract_paths_from_patch(tmp_path, patch)
     assert paths == ["src/app.py"]
+
+
+def test_installer_writes_opencode_skill(tmp_path):
+    target = tmp_path / "repo"
+    completed = subprocess.run(
+        [sys.executable, str(INSTALLER), "--target", str(target), "--opencode"],
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        check=False,
+        timeout=10,
+    )
+    assert completed.returncode == 0, completed.stdout
+    assert (target / ".opencode/skills/repo-sentinel/SKILL.md").exists()
+    config = json.loads(
+        (target / ".opencode/opencode.repo-sentinel.example.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert config["permission"]["skill"]["*"] == "allow"

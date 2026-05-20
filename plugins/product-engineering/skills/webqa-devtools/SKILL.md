@@ -20,10 +20,10 @@ Use this skill when the user asks to:
 For a repository-level install, run from the target repository root. If `CLAUDE_SKILL_DIR` is unavailable, replace it with the absolute path to this skill directory.
 
 ```bash
-uv run python "${CLAUDE_SKILL_DIR}/scripts/install_webqa_devtools.py" --target /path/to/repo --claude --codex
+uv run python "${CLAUDE_SKILL_DIR}/scripts/install_webqa_devtools.py" --target /path/to/repo --claude --codex --opencode
 ```
 
-This copies the `.webqa-devtools/` helper, Claude and Codex hook examples, local skill adapters, browser QA instruction snippets, and Chrome DevTools MCP config examples from `assets/project_scaffold/`. Review generated files before enabling hooks.
+This copies the `.webqa-devtools/` helper, Claude, Codex, and OpenCode adapter examples, local skill adapters, browser QA instruction snippets, and Chrome DevTools MCP config examples. In OpenCode, merge `.opencode/opencode.webqa-devtools.example.json` into the active `opencode.json` only when browser MCP should be enabled. Review generated files before enabling hooks.
 
 ## Required operating mode
 
@@ -38,7 +38,7 @@ This copies the `.webqa-devtools/` helper, Claude and Codex hook examples, local
    python .webqa-devtools/webqa_devtools.py preflight
    ```
 
-4. Confirm Chrome DevTools MCP is connected. In Claude Code, `/mcp` should show `chrome-devtools`. In Codex, `codex mcp list` or the CLI MCP status should show the same server.
+4. Confirm Chrome DevTools MCP is connected. In Claude Code, `/mcp` should show `chrome-devtools`. In Codex, `codex mcp list` or the CLI MCP status should show the same server. In OpenCode, `opencode debug config` should show `mcp.chrome-devtools` when the MCP config or plugin option is enabled.
 5. If Chrome DevTools MCP is not available, still produce a static QA plan and tell the user what cannot be verified in-browser.
 6. If frontend files changed, gather browser evidence before finishing:
    - DOM or visual evidence: `take_snapshot` or `take_screenshot`

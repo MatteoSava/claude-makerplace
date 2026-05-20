@@ -30,7 +30,7 @@
       "type": "adapters",
       "count": 2,
       "source": "curated-public-package",
-      "notes": "Codex and OpenCode adapters are thin compatibility layers over the Claude Code source layout."
+      "notes": "Codex and OpenCode adapters are thin compatibility layers over the Claude Code source layout. OpenCode also has an installable npm package entrypoint."
     }
   ]
 }

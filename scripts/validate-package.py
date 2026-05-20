@@ -90,6 +90,7 @@ def plugin_dirs() -> list[Path]:
 
 def validate_json() -> None:
     files = [
+        ROOT / "package.json",
         ROOT / ".claude-plugin" / "marketplace.json",
         CODEX_MARKETPLACE,
         ROOT / "opencode.json",
@@ -204,6 +205,20 @@ def validate_codex_manifests() -> None:
 def validate_opencode_adapter() -> None:
     if not (OPENCODE / "plugins" / "claude-makerplace.js").exists():
         fail("missing OpenCode runtime plugin")
+    if not (ROOT / "opencode-plugin" / "index.js").exists():
+        fail("missing installable OpenCode plugin entrypoint")
+
+    package = json.loads((ROOT / "package.json").read_text())
+    if package.get("name") != "@claude-makerplace/opencode-plugin":
+        fail("package.json should expose the OpenCode plugin package name")
+    if package.get("type") != "module":
+        fail("OpenCode plugin package should be ESM")
+    if package.get("exports", {}).get(".") != "./opencode-plugin/index.js":
+        fail("package.json should export the OpenCode plugin entrypoint")
+    package_files = set(package.get("files", []))
+    for required in {"opencode-plugin", "plugins", ".opencode/agents"}:
+        if required not in package_files:
+            fail(f"package.json files should include {required}")
 
     config = json.loads((ROOT / "opencode.json").read_text())
     if config.get("$schema") != "https://opencode.ai/config.json":
@@ -245,6 +260,41 @@ def validate_opencode_adapter() -> None:
             fail(f"{path}: OpenCode agent mode should be primary or subagent")
 
     print("opencode-adapter-ok")
+
+
+def run_opencode_plugin_smoke() -> None:
+    if not shutil.which("node"):
+        print("opencode-plugin-smoke-skipped: node unavailable")
+        return
+    run(["node", "scripts/validate-opencode-plugin.mjs"], timeout=60)
+
+    if not shutil.which("npm"):
+        print("opencode-plugin-pack-skipped: npm unavailable")
+        return
+    completed = run(["npm", "pack", "--dry-run", "--json"], timeout=60)
+    pack = json.loads(completed.stdout)
+    files = {item["path"] for item in pack[0]["files"]}
+    generated = sorted(
+        path
+        for path in files
+        if "__pycache__" in path or path.endswith((".pyc", ".pyo"))
+    )
+    if generated:
+        fail(
+            f"OpenCode npm package includes generated Python files: {', '.join(generated)}"
+        )
+    required = {
+        "opencode-plugin/index.js",
+        "plugins/repository-documentation/skills/repo-docs-wiki/SKILL.md",
+        "plugins/product-engineering/skills/webqa-devtools/SKILL.md",
+        "plugins/agent-harness-control/skills/agentops-continuity/SKILL.md",
+        ".opencode/agents/makerplace-lead.md",
+        "plugins/makerplace-system/commands/marketplace-health.md",
+    }
+    missing = sorted(required - files)
+    if missing:
+        fail(f"OpenCode npm package is missing files: {', '.join(missing)}")
+    print("opencode-plugin-pack-ok")
 
 
 def parse_frontmatter(text: str) -> dict[str, str]:
@@ -801,6 +851,7 @@ def main() -> int:
     validate_plugin_manifest_conventions()
     validate_codex_manifests()
     validate_opencode_adapter()
+    run_opencode_plugin_smoke()
     validate_skills()
     validate_commands()
     validate_agents()

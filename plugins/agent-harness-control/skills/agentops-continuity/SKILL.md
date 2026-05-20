@@ -1,6 +1,6 @@
 ---
 name: agentops-continuity
-description: Use when a Claude Code or Codex repository session spans many tool calls, context compaction, handoff, CI/debug loops, multiple skills, task state recovery, stop gates, or verification continuity.
+description: Use when a Claude Code, Codex, or OpenCode repository session spans many tool calls, context compaction, handoff, CI/debug loops, multiple skills, task state recovery, stop gates, or verification continuity.
 ---
 
 # AgentOps Continuity
@@ -27,10 +27,10 @@ State files:
 For a repository-level install, run from the target repository root. If `CLAUDE_SKILL_DIR` is unavailable, replace it with the absolute path to this skill directory.
 
 ```bash
-uv run python "${CLAUDE_SKILL_DIR}/scripts/install_agentops_continuity.py" --target /path/to/repo --claude --codex
+uv run python "${CLAUDE_SKILL_DIR}/scripts/install_agentops_continuity.py" --target /path/to/repo --claude --codex --opencode
 ```
 
-This copies `.agentops-continuity/`, Claude and Codex hook examples, local skill adapters, state templates, and instruction snippets from `assets/project_scaffold/`. Review generated files before enabling hooks.
+This copies `.agentops-continuity/`, Claude, Codex, and OpenCode examples, local skill adapters, state templates, and instruction snippets. OpenCode does not have a direct Stop hook equivalent; use the installed OpenCode agents and explicit `status`, `context`, and `mark-verified` commands for the same workflow. Review generated files before enabling hooks.
 
 ## Operating rules
 

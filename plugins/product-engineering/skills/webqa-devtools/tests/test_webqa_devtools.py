@@ -1,11 +1,15 @@
 from __future__ import annotations
 
 import importlib.util
+import json
+import subprocess
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SCAFFOLD = ROOT / "assets" / "project_scaffold"
 SCRIPT = SCAFFOLD / ".webqa-devtools" / "webqa_devtools.py"
+INSTALLER = ROOT / "scripts" / "install_webqa_devtools.py"
 
 
 def load_module():
@@ -72,3 +76,26 @@ def test_artifact_path_guard():
     ok, reason = mod.artifact_path_allowed("secrets/screen.png", policy)
     assert not ok
     assert "outside allowed" in reason
+
+
+def test_installer_writes_opencode_adapter(tmp_path):
+    target = tmp_path / "repo"
+    completed = subprocess.run(
+        [sys.executable, str(INSTALLER), "--target", str(target), "--opencode"],
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        check=False,
+        timeout=10,
+    )
+    assert completed.returncode == 0, completed.stdout
+    assert (target / ".opencode/skills/webqa-devtools/SKILL.md").exists()
+    agent = target / ".opencode/agents/ui-smoke-verifier.md"
+    assert agent.exists()
+    assert "mode: subagent" in agent.read_text(encoding="utf-8")
+    config = json.loads(
+        (target / ".opencode/opencode.webqa-devtools.example.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert config["mcp"]["chrome-devtools"]["type"] == "local"

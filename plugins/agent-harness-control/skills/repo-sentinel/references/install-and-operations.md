@@ -18,10 +18,19 @@ codex execpolicy check --pretty --rules .codex/rules/repo-sentinel.rules -- git 
 
 Trust the project `.codex/` layer if Codex prompts you.
 
-## Dual install
+## Minimal OpenCode install
 
 ```bash
-uv run python "${CLAUDE_SKILL_DIR}/scripts/install.py" --target . --claude --codex --append-agents --append-claude
+uv run python "${CLAUDE_SKILL_DIR}/scripts/install.py" --target . --opencode
+opencode debug skill
+```
+
+OpenCode loads the skill from `.opencode/skills/repo-sentinel/SKILL.md`. It does not run Claude/Codex hook JSON directly, so use explicit status/check commands or the installable Claude Makerplace OpenCode plugin for package-level context.
+
+## Full local install
+
+```bash
+uv run python "${CLAUDE_SKILL_DIR}/scripts/install.py" --target . --claude --codex --opencode --append-agents --append-claude
 ```
 
 ## Validate the core script

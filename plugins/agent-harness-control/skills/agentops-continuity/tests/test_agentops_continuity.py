@@ -10,6 +10,7 @@ PACKAGE = Path(__file__).resolve().parents[1]
 SCAFFOLD = PACKAGE / "assets" / "project_scaffold"
 SCRIPT_SRC = SCAFFOLD / ".agentops-continuity" / "agentops_continuity.py"
 POLICY_SRC = SCAFFOLD / ".agentops-continuity" / "policy.json"
+INSTALLER = PACKAGE / "scripts" / "install_agentops_continuity.py"
 
 
 def make_repo(tmp_path: Path) -> tuple[Path, Path]:
@@ -199,3 +200,26 @@ def test_posttool_records_touched_file_and_verification(tmp_path: Path):
         (repo / ".agentops-continuity/state/verification-status.json").read_text()
     )
     assert ver["status"] == "passed"
+
+
+def test_installer_writes_opencode_adapter(tmp_path: Path):
+    target = tmp_path / "repo"
+    completed = subprocess.run(
+        [sys.executable, str(INSTALLER), "--target", str(target), "--opencode"],
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        check=False,
+        timeout=10,
+    )
+    assert completed.returncode == 0, completed.stdout
+    assert (target / ".opencode/skills/agentops-continuity/SKILL.md").exists()
+    agent = target / ".opencode/agents/context-curator.md"
+    assert agent.exists()
+    assert "mode: subagent" in agent.read_text(encoding="utf-8")
+    config = json.loads(
+        (target / ".opencode/opencode.agentops-continuity.example.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert config["permission"]["skill"]["*"] == "allow"

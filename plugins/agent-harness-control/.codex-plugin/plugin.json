@@ -35,6 +35,8 @@
       "Debug this Repo Sentinel hook block.",
       "Recover context after compaction."
     ],
-    "brandColor": "#7C3AED"
+    "brandColor": "#7C3AED",
+    "composerIcon": "./assets/icon.png",
+    "logo": "./assets/icon.png"
   }
 }

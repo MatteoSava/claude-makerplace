@@ -7,7 +7,7 @@ engineering workflows.
 
 - Claude Code remains the canonical plugin layout under `plugins/*`.
 - Codex adapters live in `.agents/plugins/marketplace.json` and `plugins/*/.codex-plugin/plugin.json`.
-- OpenCode adapters live in `opencode.json` and `.opencode/`.
+- OpenCode adapters live in `opencode.json`, `.opencode/`, and the installable `opencode-plugin/` package exported by root `package.json`.
 - Keep `.agents.md` as the detailed operating guide for package maintenance.
 
 ## Engineering Rules

@@ -36,7 +36,7 @@ baseline → bounded variant → reproducible run → score/trace review → pro
 
 ## Plugins
 
-The marketplace contains 24 skills across 7 plugins, plus 4 slash commands, 3 Claude Code subagents, 4 OpenCode adapter agents, and 3 runtime hooks.
+The marketplace contains 24 skills across 7 plugins, plus 4 slash commands, 3 Claude Code subagents, an installable OpenCode plugin adapter, 15 OpenCode-visible agents, and 3 runtime hooks.
 
 ### agentic-research
 
@@ -157,12 +157,13 @@ Codex uses a parallel marketplace and per-plugin manifests:
 - plugin hooks: `plugins/*/hooks/hooks.json` command hooks can run when Codex plugin hooks are enabled and trusted
 - project hooks: `.codex/hooks.json` can register project-local command hooks; enable them through `.codex/config.toml`
 
-OpenCode uses a project-local adapter:
+OpenCode supports both a project-local adapter and an installable plugin package:
 
 - config: `opencode.json`
 - runtime plugin: `.opencode/plugins/claude-makerplace.js`
+- installable package entrypoint: `opencode-plugin/index.js`, exported by `@claude-makerplace/opencode-plugin`
 - skills and commands: `.opencode/skills` and `.opencode/commands` link to the Claude plugin source files
-- agents: `.opencode/agents` provides OpenCode-native versions of the lead, auditor, curator, and Python quality roles
+- agents: `.opencode/agents` provides OpenCode-native versions of the lead, auditor, curator, and Python quality roles; the installable package also registers skill-local WebQA and AgentOps subagents
 
 ## Feedback Delivery
 
@@ -284,8 +285,34 @@ OPENCODE_CONFIG_DIR=/path/to/claude-makerplace/.opencode \
 opencode
 ```
 
+For an installable OpenCode plugin config, add the package entrypoint:
+
+```json
+{
+  "plugin": ["file:///path/to/claude-makerplace/opencode-plugin/index.js"]
+}
+```
+
+After the package is published to npm, install it with:
+
+```bash
+opencode plugin @claude-makerplace/opencode-plugin
+```
+
+To let the plugin register Chrome DevTools MCP for `webqa-devtools`, use tuple options:
+
+```json
+{
+  "plugin": [
+    ["@claude-makerplace/opencode-plugin", { "enableChromeDevtoolsMcp": true }]
+  ]
+}
+```
+
 The default OpenCode primary agent is `makerplace-lead`. OpenCode also sees the
-project skills, commands, and subagents through `.opencode/`.
+project skills, commands, and subagents through `.opencode/`. See
+`docs/opencode-install.md` for package behavior, local install options, and the
+OpenCode hook limitations.
 
 ## Project Structure
 
@@ -294,6 +321,8 @@ claude-makerplace/
 ├── .agents/plugins/marketplace.json
 ├── .claude-plugin/marketplace.json
 ├── .opencode/
+├── opencode-plugin/
+├── package.json
 ├── opencode.json
 ├── .github/workflows/validate.yml
 ├── bin/makerplace-validate

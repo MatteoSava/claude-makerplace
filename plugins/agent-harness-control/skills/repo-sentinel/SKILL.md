@@ -1,6 +1,6 @@
 ---
 name: repo-sentinel
-description: Use when the user wants repository-level agent guardrails, Claude Code or Codex hooks, destructive-command blocking, protected-path policy, secret scanning, verification-before-stop gates, or Repo Sentinel policy tuning/debugging.
+description: Use when the user wants repository-level agent guardrails, Claude Code, Codex, or OpenCode setup, destructive-command blocking, protected-path policy, secret scanning, verification-before-stop gates, or Repo Sentinel policy tuning/debugging.
 ---
 
 # Repo Sentinel
@@ -10,7 +10,7 @@ Repo Sentinel is a deterministic hook pack for repositories. It adds a local pol
 - `PreToolUse` command checks for destructive shell commands and protected writes.
 - `PostToolUse` records touched files, verification commands, and secret-scan findings.
 - `Stop` blocks completion after code edits when verification is stale.
-- Project scaffolds cover Claude Code hooks, Codex hooks, Codex execpolicy rules, and instruction snippets.
+- Project scaffolds cover Claude Code hooks, Codex hooks, Codex execpolicy rules, OpenCode skill setup, and instruction snippets.
 
 ## When to use
 
@@ -30,10 +30,10 @@ Do not use it as a substitute for code review, dependency scanning, or cloud IAM
 For a repository-level install, run from the target repository root. If `CLAUDE_SKILL_DIR` is unavailable, replace it with the absolute path to this skill directory.
 
 ```bash
-uv run python "${CLAUDE_SKILL_DIR}/scripts/install.py" --target /path/to/repo --claude --codex
+uv run python "${CLAUDE_SKILL_DIR}/scripts/install.py" --target /path/to/repo --claude --codex --opencode
 ```
 
-This creates a project scaffold containing `.repo-sentinel/`, Claude hook settings example, Codex hooks, Codex execpolicy rules, and optional instruction snippets.
+This creates a project scaffold containing `.repo-sentinel/`, Claude hook settings example, Codex hooks, Codex execpolicy rules, OpenCode skill setup, and optional instruction snippets.
 
 After installing, review these files manually before trusting them:
 
@@ -43,6 +43,7 @@ After installing, review these files manually before trusting them:
 .codex/hooks.json
 .codex/rules/repo-sentinel.rules
 .agents/skills/repo-sentinel/SKILL.md
+.opencode/skills/repo-sentinel/SKILL.md
 AGENTS.repo-sentinel.md
 CLAUDE.repo-sentinel.md
 ```
@@ -56,6 +57,10 @@ Merge `.claude/settings.repo-sentinel.example.json` into `.claude/settings.json`
 ## Codex activation
 
 Codex reads project hooks from `.codex/hooks.json` when hooks are enabled and the project config layer is trusted. Codex skills can also be installed under `.agents/skills/repo-sentinel/`. Execpolicy rules live under `.codex/rules/`.
+
+## OpenCode activation
+
+OpenCode can load the installed skill from `.opencode/skills/repo-sentinel/SKILL.md`. Repo Sentinel's deterministic hook script remains a Claude/Codex hook surface; in OpenCode, run `.repo-sentinel/repo_sentinel.py status`, `check --record`, and explicit simulations from `references/install-and-operations.md`.
 
 Use `references/hook-schema-compatibility.md` when adapting hook event coverage or output JSON for Claude Code vs Codex.
 

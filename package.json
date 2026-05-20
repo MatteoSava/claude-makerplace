@@ -1,0 +1,33 @@
+{
+  "name": "@claude-makerplace/opencode-plugin",
+  "version": "1.0.0",
+  "description": "OpenCode plugin adapter for Claude Makerplace skills, commands, agents, and package context.",
+  "type": "module",
+  "license": "MIT",
+  "exports": {
+    ".": "./opencode-plugin/index.js"
+  },
+  "files": [
+    "opencode-plugin",
+    "plugins",
+    ".opencode/agents",
+    "AGENTS.md",
+    ".agents.md",
+    "README.md",
+    "docs",
+    "LICENSE",
+    "!**/__pycache__/**",
+    "!**/*.pyc",
+    "!**/*.pyo"
+  ],
+  "keywords": [
+    "opencode",
+    "plugin",
+    "skills",
+    "agents",
+    "claude-makerplace"
+  ],
+  "engines": {
+    "node": ">=20"
+  }
+}

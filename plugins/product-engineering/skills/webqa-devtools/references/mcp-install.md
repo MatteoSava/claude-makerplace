@@ -38,6 +38,33 @@ args = ["-y", "chrome-devtools-mcp@latest", "--isolated"]
 startup_timeout_ms = 20000
 ```
 
+## OpenCode
+
+Merge this into the active `opencode.json` or `.opencode/opencode.json`:
+
+```json
+{
+  "mcp": {
+    "chrome-devtools": {
+      "type": "local",
+      "command": ["npx", "-y", "chrome-devtools-mcp@latest", "--isolated"],
+      "enabled": true,
+      "timeout": 20000
+    }
+  }
+}
+```
+
+With the installable Claude Makerplace OpenCode plugin, use tuple options when you want the plugin to register the MCP server for the workspace:
+
+```json
+{
+  "plugin": [
+    ["@claude-makerplace/opencode-plugin", { "enableChromeDevtoolsMcp": true }]
+  ]
+}
+```
+
 ## Useful modes
 
 - `--isolated`: use a temporary browser profile per server instance.

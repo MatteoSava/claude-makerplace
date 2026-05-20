@@ -36,6 +36,33 @@ args = ["-y", "chrome-devtools-mcp@latest", "--isolated"]
 startup_timeout_ms = 20000
 ```
 
+## OpenCode
+
+Project config:
+
+```json
+{
+  "mcp": {
+    "chrome-devtools": {
+      "type": "local",
+      "command": ["npx", "-y", "chrome-devtools-mcp@latest", "--isolated"],
+      "enabled": true,
+      "timeout": 20000
+    }
+  }
+}
+```
+
+When using the installable Claude Makerplace OpenCode plugin, enable the same MCP server with plugin options:
+
+```json
+{
+  "plugin": [
+    ["@claude-makerplace/opencode-plugin", { "enableChromeDevtoolsMcp": true }]
+  ]
+}
+```
+
 ## Useful server modes
 
 Default:

@@ -69,6 +69,28 @@ def append_snippet(
     print(f"updated: {target}")
 
 
+def install_opencode(target: Path, overwrite: bool = False) -> None:
+    skill_target = target / ".opencode" / "skills" / "repo-sentinel" / "SKILL.md"
+    copy_path(PACKAGE_ROOT / "SKILL.md", skill_target, overwrite)
+    config_target = target / ".opencode" / "opencode.repo-sentinel.example.json"
+    if config_target.exists() and not overwrite:
+        print(f"skip existing: {config_target}")
+        return
+    config_target.parent.mkdir(parents=True, exist_ok=True)
+    config_target.write_text(
+        json.dumps(
+            {
+                "$schema": "https://opencode.ai/config.json",
+                "permission": {"skill": {"*": "allow"}},
+            },
+            indent=2,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    print(f"wrote: {config_target}")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(
         description="Install Repo Sentinel scaffold into a repository"
@@ -79,6 +101,9 @@ def main() -> int:
     )
     parser.add_argument(
         "--codex", action="store_true", help="Install Codex hooks, rules, and skill"
+    )
+    parser.add_argument(
+        "--opencode", action="store_true", help="Install OpenCode skill scaffold"
     )
     parser.add_argument(
         "--merge-claude",
@@ -102,11 +127,12 @@ def main() -> int:
 
     target = Path(args.target).resolve()
     target.mkdir(parents=True, exist_ok=True)
+    any_adapter = args.claude or args.codex or args.opencode
 
     # Always install the core.
     copy_path(SCAFFOLD / ".repo-sentinel", target / ".repo-sentinel", args.overwrite)
 
-    if args.claude:
+    if args.claude or not any_adapter:
         copy_path(SCAFFOLD / ".claude", target / ".claude", args.overwrite)
         if args.merge_claude:
             merge_json_hooks(
@@ -120,7 +146,7 @@ def main() -> int:
             args.overwrite,
         )
 
-    if args.codex:
+    if args.codex or not any_adapter:
         copy_path(SCAFFOLD / ".codex", target / ".codex", args.overwrite)
         copy_path(SCAFFOLD / ".agents", target / ".agents", args.overwrite)
         copy_path(
@@ -128,6 +154,8 @@ def main() -> int:
             target / "AGENTS.repo-sentinel.md",
             args.overwrite,
         )
+    if args.opencode or not any_adapter:
+        install_opencode(target, args.overwrite)
 
     if args.append_agents:
         append_snippet(

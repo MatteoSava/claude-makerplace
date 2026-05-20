@@ -11,7 +11,7 @@ identifiers.
 - 3 Claude Code plugin agents under `plugins/*/agents`
 - 3 runtime hook definitions under `plugins/*/hooks`
 - Codex marketplace and plugin manifests, with command hooks loaded from plugin hook directories when enabled
-- OpenCode config, runtime plugin, skills links, commands links, and adapter agents
+- OpenCode config, runtime plugin, installable npm package entrypoint, skills links, commands links, and adapter agents
 
 ## Provenance Rule
 
