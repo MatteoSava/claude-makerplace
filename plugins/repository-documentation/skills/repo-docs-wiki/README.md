@@ -12,6 +12,7 @@ The core idea is simple: source files, tests, configs, existing docs, and git hi
 - Lints docs for missing frontmatter, stale source references, broken links, orphan pages, and unsupported claims.
 - Repairs or reorganizes stale docs without rewriting unrelated content.
 - Builds `docs/llms.txt` as a compact routing index for future agent sessions.
+- Coordinates read-only subagent fleets for broad repo mapping and docs-fill work.
 
 ## When To Use It
 
@@ -23,6 +24,7 @@ Use this skill for requests such as:
 - "What do the docs say about this module?"
 - "Find stale docs or broken links."
 - "Generate an llms.txt for this repository."
+- "Launch a fleet of subagents to map the repo and fill the docs."
 
 Do not use it for general code changes unless the user explicitly asks to update documentation as part of the work.
 
@@ -77,6 +79,7 @@ Run scripts through `uv` from the target repository root. If `CLAUDE_SKILL_DIR` 
 | Bootstrap | `inspect_repo_docs.py` | First read-only check of repo/docs state |
 | Bootstrap | `repo_inventory.py` | Before choosing starter docs pages |
 | Bootstrap | `init_docs_wiki.py` | Only when `docs/` is missing or empty and the user asked for a docs wiki |
+| Fleet map | `inspect_repo_docs.py` and `repo_inventory.py` | Before assigning mapper subagents |
 | Ingest | `git_delta.py` | When the changed-file scope is not explicit |
 | Ingest/repair | `update_docs_index.py` | After adding, moving, renaming, or changing page frontmatter |
 | Lint | `docs_wiki_lint.py` | After docs edits or when asked to lint docs |
@@ -97,6 +100,19 @@ uv run python "${CLAUDE_SKILL_DIR}/scripts/build_llms_index.py" --docs docs --wr
 ```
 
 Scripts are helpers. The agent should still inspect relevant source files and make narrow, source-grounded edits.
+
+## Fleet Map And Fill
+
+For broad documentation requests, the skill can coordinate a subagent fleet:
+
+1. Run repo inspection scripts.
+2. Split the repository into 3-6 read-only mapping shards.
+3. Ask mapper agents for source refs, missing pages, stale docs, and suggested page summaries.
+4. Synthesize findings before writing.
+5. Write docs centrally by default, or assign writer agents only to disjoint docs paths.
+6. Refresh indexes, lint docs, update coverage, and append the docs log.
+
+Details and prompt templates live in `references/subagent-fleet-workflow.md`.
 
 ## Quality Bar
 

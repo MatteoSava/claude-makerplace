@@ -1,6 +1,6 @@
 ---
 name: repo-docs-wiki
-description: Build and maintain an LLM-friendly repository wiki inside a repository's docs/ folder. Use when asked to create, update, ingest, query, lint, repair, or reorganize project documentation; architecture docs; ADRs; API docs; runbooks; module docs; onboarding docs; or docs/ indexes from repository code, tests, configuration, and git history. Applies ingest -> query -> lint loops, source-grounded citations, frontmatter, backlinks, and incremental docs updates.
+description: Use when asked to create, update, query, lint, repair, or reorganize repository docs; docs/ wikis; architecture docs; ADRs; API docs; runbooks; onboarding docs; docs indexes; llms.txt; source-grounded citations; or a subagent fleet to map a repo and fill docs from code, tests, config, and git history.
 compatibility: Designed for Agent Skills-compatible coding agents with filesystem access. Optional scripts run through uv and require Python 3.10+ and git.
 metadata:
   version: "1.0.0"
@@ -24,6 +24,7 @@ Use this skill for requests like:
 - "what does the repo documentation say about X?", "answer from docs/ and verify against code"
 - "lint docs", "find stale docs", "detect broken links/orphan pages/uncited claims"
 - "add ADRs", "create onboarding docs", "summarize module responsibilities", "document API flows"
+- "launch a fleet of subagents to map the repo and fill the docs"
 
 ## LLM wiki pattern adapted to `docs/`
 
@@ -96,7 +97,7 @@ Use scripts only at the points called out in the operating modes below:
 
 | Script | Use when | Result to use |
 | --- | --- | --- |
-| `scripts/inspect_repo_docs.py` | Starting bootstrap, ingest, repair, or lint when repo/docs state is unclear | Read-only summary of repo shape, docs pages, state files, and git changes |
+| `scripts/inspect_repo_docs.py` | Starting bootstrap, fleet mapping, ingest, repair, or lint when repo/docs state is unclear | Read-only summary of repo shape, docs pages, state files, and git changes |
 | `scripts/repo_inventory.py` | Bootstrap planning before writing first docs pages | Read-only inventory of manifests, source candidates, tests, CI, and existing docs |
 | `scripts/init_docs_wiki.py` | `docs/` is missing/empty and the user asked to create a docs wiki | Writes the starter `docs/` skeleton; inspect and refine generated pages afterward |
 | `scripts/git_delta.py` | Ingest scope is not explicit | Read-only changed-file list from last docs checkpoint or current git status |
@@ -123,7 +124,26 @@ Use when `docs/` is missing, empty, or chaotic.
 8. Add an entry to `docs/_meta/log.md`.
 9. Report what was created, what remains unknown, and the next best ingest targets.
 
-### 2. Ingest
+### 2. Fleet map and fill
+
+Use when the user asks to "launch a fleet", "map the whole repo", "fill the docs", or otherwise requests broad repository documentation work that benefits from parallel inspection.
+
+1. Run pre-flight inventory:
+   - `uv run python "${CLAUDE_SKILL_DIR}/scripts/inspect_repo_docs.py"`
+   - `uv run python "${CLAUDE_SKILL_DIR}/scripts/repo_inventory.py"`
+2. Read `references/subagent-fleet-workflow.md`.
+3. Split the repo into source-grounded shards such as product areas, APIs, data flows, ops/CI, tests, and existing docs gaps.
+4. Launch read-only mapper subagents by shard. Each mapper reports source refs, missing docs, contradictions, and suggested pages; mapper agents do not edit files.
+5. Synthesize findings into a docs work plan. Resolve overlaps and contradictions before writing.
+6. Write or update docs narrowly. The coordinator writes by default; if writer subagents are used, assign disjoint docs page paths.
+7. Refresh indexes and validate:
+   - `uv run python "${CLAUDE_SKILL_DIR}/scripts/update_docs_index.py" docs`
+   - `uv run python "${CLAUDE_SKILL_DIR}/scripts/docs_wiki_lint.py" docs`
+   - `uv run python "${CLAUDE_SKILL_DIR}/scripts/check_docs_wiki.py"`
+8. Update `docs/_meta/coverage.md` and `docs/_meta/log.md`.
+9. Report pages created/updated, source areas covered, unresolved gaps, and validation results.
+
+### 3. Ingest
 
 Use when new source material, code changes, a diff, PR notes, or user guidance should update docs.
 
@@ -144,7 +164,7 @@ Use when new source material, code changes, a diff, PR notes, or user guidance s
 8. Run `uv run python "${CLAUDE_SKILL_DIR}/scripts/docs_wiki_lint.py" docs`.
 9. For broad ingests, run `uv run python "${CLAUDE_SKILL_DIR}/scripts/check_docs_wiki.py"`.
 
-### 3. Query
+### 4. Query
 
 Use when answering questions about the project docs.
 
@@ -154,7 +174,7 @@ Use when answering questions about the project docs.
 4. Answer with concise source-grounded references.
 5. If the answer reveals a durable insight missing from `docs/`, offer a patch or create it when the user asked for documentation maintenance.
 
-### 4. Lint
+### 5. Lint
 
 Use to health-check docs.
 
@@ -179,7 +199,7 @@ uv run python "${CLAUDE_SKILL_DIR}/scripts/check_docs_wiki.py"
 
 Write a short health report. Only write `docs/_meta/lint-report.md` when the user requested a persisted report.
 
-### 5. Repair/refactor
+### 6. Repair/refactor
 
 Use when the docs are stale or disorganized.
 
@@ -191,7 +211,7 @@ Use when the docs are stale or disorganized.
 6. If page paths changed, run `uv run python "${CLAUDE_SKILL_DIR}/scripts/update_docs_index.py" docs` or patch the index manually.
 7. Run `uv run python "${CLAUDE_SKILL_DIR}/scripts/docs_wiki_lint.py" docs`.
 
-### 6. LLM-readable index
+### 7. LLM-readable index
 
 Use when the user asks for `llms.txt`, compact agent context, or a low-token docs entrypoint.
 
@@ -218,5 +238,6 @@ Read these only when needed:
 
 - `references/repo-docs-schema.md` - page taxonomy, frontmatter, citations, naming rules.
 - `references/workflows.md` - detailed bootstrap/ingest/query/lint/repair procedures.
+- `references/subagent-fleet-workflow.md` - parallel repository mapping and docs-fill workflow.
 - `references/quality-gates.md` - review checklist for generated docs.
 - `templates/page-templates.md` - copyable Markdown templates for each page type.
