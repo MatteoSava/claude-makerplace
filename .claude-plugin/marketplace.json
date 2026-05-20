@@ -27,7 +27,7 @@
     {
       "name": "cloud-delivery",
       "source": "./plugins/cloud-delivery",
-      "description": "Skills for cloud deployment, Azure DevOps delivery, infrastructure standards, and operational workflows.",
+      "description": "Skills for cloud deployment, Azure DevOps delivery, delivery standards, and operational workflows.",
       "version": "1.0.0",
       "license": "MIT",
       "category": "Developer Tools",
@@ -55,14 +55,30 @@
       ]
     },
     {
+      "name": "repository-documentation",
+      "source": "./plugins/repository-documentation",
+      "description": "Skills for source-grounded repository documentation, docs/ wiki maintenance, and LLM-readable documentation indexes.",
+      "version": "1.0.0",
+      "license": "MIT",
+      "category": "Developer Tools",
+      "tags": [
+        "documentation",
+        "docs",
+        "wiki",
+        "llms",
+        "source-grounded"
+      ]
+    },
+    {
       "name": "python-quality",
       "source": "./plugins/python-quality",
-      "description": "Python quality skills, agents, and hooks using uv with pinned Ruff, Pyright, Mypy, and pytest.",
+      "description": "Python quality, test-driven development skills, agents, and hooks using uv with pinned Ruff, Pyright, Mypy, and pytest.",
       "version": "1.0.0",
       "license": "MIT",
       "category": "Developer Tools",
       "tags": [
         "python",
+        "tdd",
         "uv",
         "ruff",
         "pyright",

@@ -1,0 +1,36 @@
+{
+  "name": "claude-makerplace",
+  "description": "Sanitized provenance summary for the public plugin package.",
+  "items": [
+    {
+      "type": "skills",
+      "count": 23,
+      "source": "curated-public-package",
+      "notes": "Skill files are sanitized and stored under plugins/*/skills/*/SKILL.md."
+    },
+    {
+      "type": "commands",
+      "count": 4,
+      "source": "curated-public-package",
+      "notes": "Command files are stored under plugins/makerplace-system/commands."
+    },
+    {
+      "type": "agents",
+      "count": 3,
+      "source": "curated-public-package",
+      "notes": "Claude Code plugin agents are stored under plugin agents directories."
+    },
+    {
+      "type": "hooks",
+      "count": 2,
+      "source": "curated-public-package",
+      "notes": "Hook definitions are stored under plugin hooks directories."
+    },
+    {
+      "type": "adapters",
+      "count": 2,
+      "source": "curated-public-package",
+      "notes": "Codex and OpenCode adapters are thin compatibility layers over the Claude Code source layout."
+    }
+  ]
+}

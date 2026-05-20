@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 import shutil
 import stat
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 from typing import NoReturn
 
@@ -13,9 +15,12 @@ from typing import NoReturn
 ROOT = Path(__file__).resolve().parents[1]
 PLUGINS = ROOT / "plugins"
 BIN_WRAPPER = ROOT / "bin" / "makerplace-validate"
+CODEX_MARKETPLACE = ROOT / ".agents" / "plugins" / "marketplace.json"
+OPENCODE = ROOT / ".opencode"
 
 TEXT_SUFFIXES = {
     ".json",
+    ".js",
     ".md",
     ".py",
     ".sh",
@@ -86,10 +91,13 @@ def plugin_dirs() -> list[Path]:
 def validate_json() -> None:
     files = [
         ROOT / ".claude-plugin" / "marketplace.json",
+        CODEX_MARKETPLACE,
+        ROOT / "opencode.json",
         ROOT / "docs" / "source-inventory.json",
         ROOT / "docs" / "source-provenance.json",
     ]
     files.extend(path / ".claude-plugin" / "plugin.json" for path in plugin_dirs())
+    files.extend(path / ".codex-plugin" / "plugin.json" for path in plugin_dirs())
     files.extend(sorted(PLUGINS.glob("*/hooks/hooks.json")))
     files.extend(sorted(PLUGINS.glob("*/.lsp.json")))
     for path in files:
@@ -143,6 +151,100 @@ def validate_plugin_manifest_conventions() -> None:
             fail(f"{plugin}: agents declared but no agent files exist")
 
     print("plugin-manifest-conventions-ok")
+
+
+def validate_codex_manifests() -> None:
+    marketplace = json.loads(CODEX_MARKETPLACE.read_text())
+    if marketplace.get("name") != "claude-makerplace":
+        fail("Codex marketplace name should be claude-makerplace")
+    if marketplace.get("interface", {}).get("displayName") != "Claude Makerplace":
+        fail("Codex marketplace display name should be Claude Makerplace")
+
+    rows = marketplace.get("plugins")
+    if not isinstance(rows, list):
+        fail("Codex marketplace plugins should be a list")
+
+    expected_names = {path.name for path in plugin_dirs()}
+    declared_names = {row.get("name") for row in rows if isinstance(row, dict)}
+    if declared_names != expected_names:
+        fail("Codex marketplace plugin list does not match plugin directories")
+
+    for row in rows:
+        if not isinstance(row, dict):
+            fail("Codex marketplace entries should be objects")
+        name = row.get("name")
+        source = row.get("source")
+        if source != {"source": "local", "path": f"./plugins/{name}"}:
+            fail(f"{name}: Codex marketplace source should point at ./plugins/{name}")
+        policy = row.get("policy")
+        if policy != {"installation": "AVAILABLE", "authentication": "ON_INSTALL"}:
+            fail(f"{name}: Codex marketplace policy should use explicit defaults")
+        if row.get("category") != "Developer Tools":
+            fail(f"{name}: Codex marketplace category should be Developer Tools")
+
+    for plugin in plugin_dirs():
+        manifest_path = plugin / ".codex-plugin" / "plugin.json"
+        if not manifest_path.exists():
+            fail(f"{plugin}: missing Codex plugin manifest")
+        manifest = json.loads(manifest_path.read_text())
+        if manifest.get("name") != plugin.name:
+            fail(f"{plugin}: Codex manifest name does not match plugin directory")
+        if sorted(manifest.get("keywords", [])) == []:
+            fail(f"{plugin}: Codex manifest should include discovery keywords")
+
+        skill_files = sorted((plugin / "skills").glob("*/SKILL.md"))
+        if skill_files and manifest.get("skills") != "./skills/":
+            fail(f"{plugin}: Codex skill plugin should expose ./skills/")
+        if not skill_files and "skills" in manifest:
+            fail(f"{plugin}: Codex manifest declares skills but no skill files exist")
+
+    print("codex-manifests-ok")
+
+
+def validate_opencode_adapter() -> None:
+    if not (OPENCODE / "plugins" / "claude-makerplace.js").exists():
+        fail("missing OpenCode runtime plugin")
+
+    config = json.loads((ROOT / "opencode.json").read_text())
+    if config.get("$schema") != "https://opencode.ai/config.json":
+        fail("opencode.json should declare the OpenCode schema")
+    if config.get("default_agent") != "makerplace-lead":
+        fail("opencode.json should default to the makerplace-lead agent")
+
+    skill_files = sorted(PLUGINS.glob("*/skills/*/SKILL.md"))
+    for skill_file in skill_files:
+        skill_name = skill_file.parent.name
+        link = OPENCODE / "skills" / skill_name
+        if not link.exists():
+            fail(f"OpenCode skill link missing for {skill_name}")
+        if link.resolve() != skill_file.parent.resolve():
+            fail(f"OpenCode skill link target mismatch for {skill_name}")
+
+    command_files = sorted(PLUGINS.glob("*/commands/*.md"))
+    for command_file in command_files:
+        link = OPENCODE / "commands" / command_file.name
+        if not link.exists():
+            fail(f"OpenCode command link missing for {command_file.stem}")
+        if link.resolve() != command_file.resolve():
+            fail(f"OpenCode command link target mismatch for {command_file.stem}")
+
+    expected_agents = {
+        "makerplace-lead.md",
+        "marketplace-auditor.md",
+        "python-quality-reviewer.md",
+        "skill-curator.md",
+    }
+    agent_files = sorted((OPENCODE / "agents").glob("*.md"))
+    if {path.name for path in agent_files} != expected_agents:
+        fail("OpenCode agent files do not match expected adapter agents")
+    for path in agent_files:
+        frontmatter = parse_frontmatter(path.read_text())
+        if not frontmatter.get("description"):
+            fail(f"{path}: OpenCode agent missing description")
+        if frontmatter.get("mode") not in {"primary", "subagent"}:
+            fail(f"{path}: OpenCode agent mode should be primary or subagent")
+
+    print("opencode-adapter-ok")
 
 
 def parse_frontmatter(text: str) -> dict[str, str]:
@@ -277,8 +379,34 @@ def validate_hooks() -> None:
         if "hooks" not in hooks or "PostToolUse" not in hooks["hooks"]:
             fail(f"{hook_file}: PostToolUse hooks are missing")
 
+    python_hooks = json.loads(
+        (PLUGINS / "python-quality" / "hooks" / "hooks.json").read_text()
+    )["hooks"]
+    post_tool_use = python_hooks.get("PostToolUse", [])
+    stop = python_hooks.get("Stop", [])
+    if (
+        len(post_tool_use) != 1
+        or post_tool_use[0].get("matcher") != "Write|Edit|MultiEdit"
+    ):
+        fail("python-quality PostToolUse hook should target Write|Edit|MultiEdit")
+    if len(stop) != 1:
+        fail("python-quality should declare one Stop hook for full quality checks")
+    for event_name, entries in {"PostToolUse": post_tool_use, "Stop": stop}.items():
+        command_hooks = [
+            hook
+            for entry in entries
+            for hook in entry.get("hooks", [])
+            if hook.get("type") == "command"
+        ]
+        if len(command_hooks) != 1:
+            fail(f"python-quality {event_name} should declare one command hook")
+        command = command_hooks[0].get("command", "")
+        if "python-quality-hook.py" not in command:
+            fail(f"python-quality {event_name} should run python-quality-hook.py")
+
     scripts = [
         PLUGINS / "makerplace-system" / "scripts" / "makerplace-guard.sh",
+        PLUGINS / "makerplace-system" / "scripts" / "send-feedback.sh",
         PLUGINS / "python-quality" / "scripts" / "python-quality-hook.py",
     ]
     for path in scripts:
@@ -311,7 +439,7 @@ def validate_no_leaks() -> None:
     for path in sorted(ROOT.rglob("*")):
         if not path.is_file():
             continue
-        if ".git" in path.parts:
+        if ".git" in path.parts or "node_modules" in path.parts:
             continue
         if path.suffix not in TEXT_SUFFIXES:
             continue
@@ -336,7 +464,9 @@ def run_claude_validation_if_available() -> None:
 
 def run_python_hook_smoke() -> None:
     target = PLUGINS / "python-quality" / "scripts" / "python-quality-hook.py"
-    payload = json.dumps({"tool_input": {"file_path": str(target)}})
+    payload = json.dumps(
+        {"hook_event_name": "PostToolUse", "tool_input": {"file_path": str(target)}}
+    )
     completed = subprocess.run(
         ["uv", "run", "python", str(target)],
         cwd=ROOT,
@@ -349,14 +479,118 @@ def run_python_hook_smoke() -> None:
     print(completed.stdout.strip())
     if completed.returncode != 0:
         fail("python quality hook smoke test failed")
-    if "All Python quality checks passed" not in completed.stdout:
-        fail("python quality hook did not report passing checks")
+    if "Python light quality hook ran" not in completed.stdout:
+        fail("python quality PostToolUse hook did not report light checks")
+    if "All Python light quality checks passed" not in completed.stdout:
+        fail("python quality PostToolUse hook did not report passing checks")
+    if "pytest" in completed.stdout:
+        fail("python quality PostToolUse hook should not run pytest")
+
+    with tempfile.TemporaryDirectory(prefix="makerplace-stop-hook-") as temp_name:
+        temp = Path(temp_name)
+        (temp / "sample.py").write_text(
+            "def add(left: int, right: int) -> int:\n    return left + right\n"
+        )
+        tests = temp / "tests"
+        tests.mkdir()
+        (tests / "test_sample.py").write_text(
+            "from sample import add\n\n\ndef test_add() -> None:\n    assert add(1, 2) == 3\n"
+        )
+        stop_payload = json.dumps(
+            {
+                "hook_event_name": "Stop",
+                "cwd": str(temp),
+                "stop_hook_active": False,
+            }
+        )
+        stop_completed = subprocess.run(
+            ["uv", "run", "python", str(target)],
+            cwd=ROOT,
+            input=stop_payload,
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            timeout=240,
+        )
+    print(stop_completed.stdout.strip())
+    if stop_completed.returncode != 0:
+        fail("python quality Stop hook smoke test failed")
+    if stop_completed.stdout.strip():
+        fail("python quality Stop hook should be silent when full checks pass")
     print("python-hook-smoke-ok")
+
+
+def run_feedback_sender_smoke() -> None:
+    target = PLUGINS / "makerplace-system" / "scripts" / "send-feedback.sh"
+    completed = subprocess.run(
+        [str(target), "-"],
+        cwd=ROOT,
+        input='{"message":"feedback smoke"}',
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        timeout=30,
+    )
+    print(completed.stdout.strip())
+    if completed.returncode != 1:
+        fail("feedback sender should fail without a configured destination")
+    if completed.stdout.strip() != "FAIL:missing-destination":
+        fail(
+            "feedback sender should report missing destination without leaking details"
+        )
+
+    github_env = {
+        **os.environ,
+        "MAKERPLACE_FEEDBACK_DESTINATION": "github",
+        "MAKERPLACE_FEEDBACK_GITHUB_REPOSITORY": "owner/repo",
+        "MAKERPLACE_FEEDBACK_GITHUB_TOKEN": "dry-run-token",
+        "MAKERPLACE_FEEDBACK_DRY_RUN": "1",
+    }
+    github_issue = subprocess.run(
+        [str(target), "-"],
+        cwd=ROOT,
+        env=github_env,
+        input='{"message":"feedback smoke"}',
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        timeout=30,
+    )
+    print(github_issue.stdout.strip())
+    if (
+        github_issue.returncode != 0
+        or github_issue.stdout.strip() != "DRYRUN:github-issue"
+    ):
+        fail("feedback sender should support GitHub issue dry run")
+
+    github_comment_env = {
+        **github_env,
+        "MAKERPLACE_FEEDBACK_GITHUB_ISSUE_NUMBER": "1",
+    }
+    github_comment = subprocess.run(
+        [str(target), "-"],
+        cwd=ROOT,
+        env=github_comment_env,
+        input='{"message":"feedback smoke"}',
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        timeout=30,
+    )
+    print(github_comment.stdout.strip())
+    if (
+        github_comment.returncode != 0
+        or github_comment.stdout.strip() != "DRYRUN:github-comment"
+    ):
+        fail("feedback sender should support GitHub issue comment dry run")
+    print("feedback-sender-smoke-ok")
 
 
 def main() -> int:
     validate_json()
     validate_plugin_manifest_conventions()
+    validate_codex_manifests()
+    validate_opencode_adapter()
     validate_skills()
     validate_commands()
     validate_agents()
@@ -366,6 +600,7 @@ def main() -> int:
     validate_no_leaks()
     run_claude_validation_if_available()
     run_python_hook_smoke()
+    run_feedback_sender_smoke()
     return 0
 
 

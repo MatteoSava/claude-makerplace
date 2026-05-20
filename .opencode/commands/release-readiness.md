@@ -1,0 +1,1 @@
+../../plugins/makerplace-system/commands/release-readiness.md

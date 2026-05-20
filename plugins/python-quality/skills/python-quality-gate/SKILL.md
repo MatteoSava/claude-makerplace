@@ -24,15 +24,22 @@ Pinned hook tools:
 
 ## Automatic Hook Behavior
 
-After `Write`, `Edit`, or `MultiEdit` touches a `.py` file, the plugin hook runs:
+After `Write`, `Edit`, or `MultiEdit` touches a `.py` file, the PostToolUse hook runs light per-file checks:
 
 1. `ruff check <file>`
 2. `ruff format --check <file>`
 3. `pyright <file>`
 4. `mypy <file>`
-5. targeted `pytest -q` when a matching test file exists
 
-The hook reports results back to Claude as additional context. Treat failures as work still open.
+Before Claude returns to the user, the Stop hook runs broader project checks:
+
+1. `ruff check .`
+2. `ruff format --check .`
+3. `pyright` over discovered Python files
+4. `mypy` over discovered Python files
+5. `pytest -q` for the test suite when tests exist
+
+The PostToolUse hook reports results back to Claude as additional context. The Stop hook is silent when checks pass and blocks stopping when checks fail. Treat hook failures as work still open.
 
 ## Fix Order
 

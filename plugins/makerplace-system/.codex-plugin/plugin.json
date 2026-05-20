@@ -1,0 +1,33 @@
+{
+  "name": "makerplace-system",
+  "version": "1.0.0",
+  "description": "Marketplace maintenance workflows, audit roles, sanitization checks, and release-readiness guidance for Claude Makerplace.",
+  "author": {
+    "name": "Independent Claude Makerplace"
+  },
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "marketplace",
+    "multi-agent",
+    "audit",
+    "sanitization",
+    "release-readiness"
+  ],
+  "interface": {
+    "displayName": "Makerplace System",
+    "shortDescription": "Marketplace audit and release workflows.",
+    "longDescription": "System guidance for maintaining the plugin marketplace, preserving sanitization, coordinating multi-agent review, and preparing releases.",
+    "developerName": "Independent Claude Makerplace",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Interactive"
+    ],
+    "defaultPrompt": [
+      "Audit this marketplace package.",
+      "Prepare release readiness notes.",
+      "Collect plugin feedback."
+    ],
+    "brandColor": "#475569"
+  }
+}

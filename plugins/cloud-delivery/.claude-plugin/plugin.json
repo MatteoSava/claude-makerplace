@@ -1,7 +1,7 @@
 {
   "name": "cloud-delivery",
   "version": "1.0.0",
-  "description": "Skills for cloud deployment, Azure DevOps delivery, infrastructure standards, work item linking, and operational workflows.",
+  "description": "Skills for cloud deployment, Azure DevOps delivery, delivery standards, work item linking, and operational workflows.",
   "author": {
     "name": "Independent Claude Makerplace"
   },

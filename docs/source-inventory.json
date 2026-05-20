@@ -1,0 +1,163 @@
+[
+  {
+    "name": "skill-autoresearch-loop",
+    "plugin": "agentic-research",
+    "type": "skill",
+    "path": "plugins/agentic-research/skills/skill-autoresearch-loop/SKILL.md",
+    "decision": "candidate"
+  },
+  {
+    "name": "agentic-experiment-loop",
+    "plugin": "agentic-research",
+    "type": "skill",
+    "path": "plugins/agentic-research/skills/agentic-experiment-loop/SKILL.md",
+    "decision": "candidate"
+  },
+  {
+    "name": "benchmark-run-operations",
+    "plugin": "agentic-research",
+    "type": "skill",
+    "path": "plugins/agentic-research/skills/benchmark-run-operations/SKILL.md",
+    "decision": "candidate"
+  },
+  {
+    "name": "experiment-registry",
+    "plugin": "agentic-research",
+    "type": "skill",
+    "path": "plugins/agentic-research/skills/experiment-registry/SKILL.md",
+    "decision": "candidate"
+  },
+  {
+    "name": "score-model-probe",
+    "plugin": "agentic-research",
+    "type": "skill",
+    "path": "plugins/agentic-research/skills/score-model-probe/SKILL.md",
+    "decision": "candidate"
+  },
+  {
+    "name": "azure-ai-sdk-research",
+    "plugin": "agentic-research",
+    "type": "skill",
+    "path": "plugins/agentic-research/skills/azure-ai-sdk-research/SKILL.md",
+    "decision": "candidate"
+  },
+  {
+    "name": "azure-ai-trace-continuity",
+    "plugin": "agentic-research",
+    "type": "skill",
+    "path": "plugins/agentic-research/skills/azure-ai-trace-continuity/SKILL.md",
+    "decision": "candidate"
+  },
+  {
+    "name": "azure-container-app-deploy",
+    "plugin": "cloud-delivery",
+    "type": "skill",
+    "path": "plugins/cloud-delivery/skills/azure-container-app-deploy/SKILL.md",
+    "decision": "candidate"
+  },
+  {
+    "name": "template-pipeline-authoring",
+    "plugin": "cloud-delivery",
+    "type": "skill",
+    "path": "plugins/cloud-delivery/skills/template-pipeline-authoring/SKILL.md",
+    "decision": "candidate"
+  },
+  {
+    "name": "azure-devops-pr-workflow",
+    "plugin": "cloud-delivery",
+    "type": "skill",
+    "path": "plugins/cloud-delivery/skills/azure-devops-pr-workflow/SKILL.md",
+    "decision": "candidate"
+  },
+  {
+    "name": "work-item-linking",
+    "plugin": "cloud-delivery",
+    "type": "skill",
+    "path": "plugins/cloud-delivery/skills/work-item-linking/SKILL.md",
+    "decision": "candidate"
+  },
+  {
+    "name": "authentication-troubleshooting",
+    "plugin": "cloud-delivery",
+    "type": "skill",
+    "path": "plugins/cloud-delivery/skills/authentication-troubleshooting/SKILL.md",
+    "decision": "candidate"
+  },
+  {
+    "name": "internal-wiki-query",
+    "plugin": "cloud-delivery",
+    "type": "skill",
+    "path": "plugins/cloud-delivery/skills/internal-wiki-query/SKILL.md",
+    "decision": "candidate"
+  },
+  {
+    "name": "trmnl-terminus-ops",
+    "plugin": "cloud-delivery",
+    "type": "skill",
+    "path": "plugins/cloud-delivery/skills/trmnl-terminus-ops/SKILL.md",
+    "decision": "candidate"
+  },
+  {
+    "name": "react-typescript-standards",
+    "plugin": "product-engineering",
+    "type": "skill",
+    "path": "plugins/product-engineering/skills/react-typescript-standards/SKILL.md",
+    "decision": "candidate"
+  },
+  {
+    "name": "sse-chat-streaming",
+    "plugin": "product-engineering",
+    "type": "skill",
+    "path": "plugins/product-engineering/skills/sse-chat-streaming/SKILL.md",
+    "decision": "candidate"
+  },
+  {
+    "name": "playwright-ui-validation",
+    "plugin": "product-engineering",
+    "type": "skill",
+    "path": "plugins/product-engineering/skills/playwright-ui-validation/SKILL.md",
+    "decision": "candidate"
+  },
+  {
+    "name": "telegram-miniapp-feature",
+    "plugin": "product-engineering",
+    "type": "skill",
+    "path": "plugins/product-engineering/skills/telegram-miniapp-feature/SKILL.md",
+    "decision": "candidate"
+  },
+  {
+    "name": "ton-wallet-integration",
+    "plugin": "product-engineering",
+    "type": "skill",
+    "path": "plugins/product-engineering/skills/ton-wallet-integration/SKILL.md",
+    "decision": "candidate"
+  },
+  {
+    "name": "intent-system-extension",
+    "plugin": "product-engineering",
+    "type": "skill",
+    "path": "plugins/product-engineering/skills/intent-system-extension/SKILL.md",
+    "decision": "candidate"
+  },
+  {
+    "name": "python-quality-gate",
+    "plugin": "python-quality",
+    "type": "skill",
+    "path": "plugins/python-quality/skills/python-quality-gate/SKILL.md",
+    "decision": "candidate"
+  },
+  {
+    "name": "python-tdd",
+    "plugin": "python-quality",
+    "type": "skill",
+    "path": "plugins/python-quality/skills/python-tdd/SKILL.md",
+    "decision": "candidate"
+  },
+  {
+    "name": "repo-docs-wiki",
+    "plugin": "repository-documentation",
+    "type": "skill",
+    "path": "plugins/repository-documentation/skills/repo-docs-wiki/SKILL.md",
+    "decision": "candidate"
+  }
+]

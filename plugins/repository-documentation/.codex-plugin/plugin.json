@@ -1,0 +1,36 @@
+{
+  "name": "repository-documentation",
+  "version": "1.0.0",
+  "description": "Skills for source-grounded repository documentation, docs/ wiki maintenance, and LLM-readable documentation indexes.",
+  "author": {
+    "name": "Independent Claude Makerplace"
+  },
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "documentation",
+    "docs",
+    "wiki",
+    "llms",
+    "source-grounded"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Repository Documentation",
+    "shortDescription": "Source-grounded docs wiki workflows.",
+    "longDescription": "Reusable workflows for creating, updating, querying, linting, and repairing repository documentation with source references and LLM-readable indexes.",
+    "developerName": "Independent Claude Makerplace",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "Create a docs wiki for this repository.",
+      "Update docs from this diff.",
+      "Lint the repository documentation."
+    ],
+    "brandColor": "#0F766E"
+  }
+}

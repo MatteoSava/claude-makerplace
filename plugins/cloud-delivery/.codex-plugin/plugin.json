@@ -1,0 +1,35 @@
+{
+  "name": "cloud-delivery",
+  "version": "1.0.0",
+  "description": "Skills for cloud deployment, Azure DevOps delivery, delivery standards, work item linking, and operational workflows.",
+  "author": {
+    "name": "Independent Claude Makerplace"
+  },
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "cloud",
+    "azure",
+    "devops",
+    "infrastructure",
+    "delivery"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Cloud Delivery",
+    "shortDescription": "Cloud deployment and delivery workflows.",
+    "longDescription": "Reusable skills for cloud deployment, Bicep standards, Azure DevOps pull request workflows, pipeline authoring, work item linking, and operational troubleshooting.",
+    "developerName": "Independent Claude Makerplace",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Interactive"
+    ],
+    "defaultPrompt": [
+      "Debug this container deployment.",
+      "Draft an Azure DevOps PR flow.",
+      "Review this Bicep module."
+    ],
+    "brandColor": "#0F766E"
+  }
+}

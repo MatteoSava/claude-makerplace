@@ -1,0 +1,39 @@
+{
+  "name": "python-quality",
+  "version": "1.0.0",
+  "description": "Python quality and test-driven development skills using uv with pinned Ruff, Pyright, Mypy, and pytest.",
+  "author": {
+    "name": "Independent Claude Makerplace"
+  },
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "python",
+    "tdd",
+    "uv",
+    "ruff",
+    "pyright",
+    "mypy",
+    "pytest"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Python Quality",
+    "shortDescription": "uv-only Python quality and TDD workflows.",
+    "longDescription": "Reusable Python workflows for uv, pinned tooling, Ruff, Pyright, Mypy, targeted pytest, strict TDD cycles, and maintainable fixes.",
+    "developerName": "Independent Claude Makerplace",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "Run the Python quality gate.",
+      "Implement this Python change with TDD.",
+      "Fix this Python validation failure.",
+      "Review Python test coverage."
+    ],
+    "brandColor": "#16A34A"
+  }
+}

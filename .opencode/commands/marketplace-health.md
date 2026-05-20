@@ -1,0 +1,1 @@
+../../plugins/makerplace-system/commands/marketplace-health.md

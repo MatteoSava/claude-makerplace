@@ -1,0 +1,35 @@
+{
+  "name": "agentic-research",
+  "version": "1.0.0",
+  "description": "Skills for self-improving agents, benchmark loops, experiment registries, trace continuity, and score-model investigation.",
+  "author": {
+    "name": "Independent Claude Makerplace"
+  },
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "agentic-research",
+    "skill-autoresearch",
+    "benchmarks",
+    "experiments",
+    "observability"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Agentic Research",
+    "shortDescription": "Self-improving agent and benchmark workflows.",
+    "longDescription": "Reusable skills for skill autoresearch, benchmark operations, experiment registries, score-model probing, SDK research, and trace continuity.",
+    "developerName": "Independent Claude Makerplace",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Interactive"
+    ],
+    "defaultPrompt": [
+      "Improve a skill from this feedback.",
+      "Plan a bounded agent experiment.",
+      "Review a benchmark result."
+    ],
+    "brandColor": "#2563EB"
+  }
+}

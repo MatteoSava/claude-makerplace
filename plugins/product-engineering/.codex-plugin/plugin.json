@@ -1,0 +1,36 @@
+{
+  "name": "product-engineering",
+  "version": "1.0.0",
+  "description": "Skills for full-stack product work across React, ASP.NET-style APIs, streaming, Playwright validation, mini-apps, and wallet integrations.",
+  "author": {
+    "name": "Independent Claude Makerplace"
+  },
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "frontend",
+    "react",
+    "api",
+    "playwright",
+    "full-stack"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Product Engineering",
+    "shortDescription": "Full-stack product implementation workflows.",
+    "longDescription": "Reusable skills for React and TypeScript standards, SSE chat streaming, Playwright UI validation, Telegram Mini Apps, TON wallet integration, and intent system extension.",
+    "developerName": "Independent Claude Makerplace",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "Build this React feature.",
+      "Validate this UI with Playwright.",
+      "Add an SSE chat stream."
+    ],
+    "brandColor": "#7C3AED"
+  }
+}
