@@ -9,8 +9,6 @@ This sanitized inventory records the public skill surface bundled in Claude Make
 | agentic-research | `benchmark-run-operations` | `plugins/agentic-research/skills/benchmark-run-operations/SKILL.md` |
 | agentic-research | `experiment-registry` | `plugins/agentic-research/skills/experiment-registry/SKILL.md` |
 | agentic-research | `score-model-probe` | `plugins/agentic-research/skills/score-model-probe/SKILL.md` |
-| agentic-research | `azure-ai-sdk-research` | `plugins/agentic-research/skills/azure-ai-sdk-research/SKILL.md` |
-| agentic-research | `azure-ai-trace-continuity` | `plugins/agentic-research/skills/azure-ai-trace-continuity/SKILL.md` |
 | cloud-delivery | `azure-container-app-deploy` | `plugins/cloud-delivery/skills/azure-container-app-deploy/SKILL.md` |
 | cloud-delivery | `template-pipeline-authoring` | `plugins/cloud-delivery/skills/template-pipeline-authoring/SKILL.md` |
 | cloud-delivery | `azure-devops-pr-workflow` | `plugins/cloud-delivery/skills/azure-devops-pr-workflow/SKILL.md` |

@@ -36,7 +36,7 @@ baseline → bounded variant → reproducible run → score/trace review → pro
 
 ## Plugins
 
-The marketplace contains 24 skills across 7 plugins, plus 4 slash commands, 3 Claude Code subagents, 4 OpenCode adapter agents, and 3 runtime hooks.
+The marketplace contains 22 skills across 7 plugins, plus 4 slash commands, 3 Claude Code subagents, 4 OpenCode adapter agents, and 3 runtime hooks.
 
 ### agentic-research
 
@@ -49,8 +49,6 @@ Self-improving agent workflows and experiment infrastructure.
 | `benchmark-run-operations` | Launch, monitor, upload, and compare scored benchmark runs with safety gates |
 | `experiment-registry` | Machine-readable registry of experiment runs with provenance, scores, and promotion state |
 | `score-model-probe` | Reverse-engineer opaque scoring functions with minimal targeted probes |
-| `azure-ai-sdk-research` | Research-first Azure AI SDK investigation (Foundry, AI.Projects, Responses API) |
-| `azure-ai-trace-continuity` | Diagnose fragmented OpenTelemetry traces across Azure AI Foundry and Application Insights |
 
 ### cloud-delivery
 
@@ -297,7 +295,7 @@ claude-makerplace/
 ├── bin/makerplace-validate
 ├── docs/
 └── plugins/
-    ├── agentic-research/   (7 skills)
+    ├── agentic-research/   (5 skills)
     ├── cloud-delivery/     (7 skills)
     ├── product-engineering/ (6 skills)
     ├── repository-documentation/ (1 skill)

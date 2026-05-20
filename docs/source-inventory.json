@@ -35,20 +35,6 @@
     "decision": "candidate"
   },
   {
-    "name": "azure-ai-sdk-research",
-    "plugin": "agentic-research",
-    "type": "skill",
-    "path": "plugins/agentic-research/skills/azure-ai-sdk-research/SKILL.md",
-    "decision": "candidate"
-  },
-  {
-    "name": "azure-ai-trace-continuity",
-    "plugin": "agentic-research",
-    "type": "skill",
-    "path": "plugins/agentic-research/skills/azure-ai-trace-continuity/SKILL.md",
-    "decision": "candidate"
-  },
-  {
     "name": "azure-container-app-deploy",
     "plugin": "cloud-delivery",
     "type": "skill",

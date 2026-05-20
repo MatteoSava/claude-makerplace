@@ -6,7 +6,7 @@ identifiers.
 
 ## Included Surface
 
-- 24 skills under `plugins/*/skills/*/SKILL.md`
+- 22 skills under `plugins/*/skills/*/SKILL.md`
 - 4 commands under `plugins/makerplace-system/commands`
 - 3 Claude Code plugin agents under `plugins/*/agents`
 - 3 runtime hook definitions under `plugins/*/hooks`

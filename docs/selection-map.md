@@ -9,8 +9,6 @@ This package keeps the selected skill set small and grouped by operational domai
 - `benchmark-run-operations`: handles reproducible benchmark runs.
 - `experiment-registry`: preserves run metadata and promotion state.
 - `score-model-probe`: investigates opaque score behavior.
-- `azure-ai-sdk-research`: guides research-first SDK work.
-- `azure-ai-trace-continuity`: diagnoses fragmented AI traces.
 
 ## Cloud Delivery
 
