@@ -91,6 +91,7 @@ def validate_json() -> None:
     ]
     files.extend(path / ".claude-plugin" / "plugin.json" for path in plugin_dirs())
     files.extend(sorted(PLUGINS.glob("*/hooks/hooks.json")))
+    files.extend(sorted(PLUGINS.glob("*/.lsp.json")))
     for path in files:
         with path.open() as handle:
             json.load(handle)
@@ -122,6 +123,11 @@ def validate_plugin_manifest_conventions() -> None:
                 f"{plugin}: plugin.json should not declare hooks explicitly; keep "
                 "hooks/hooks.json auto-discovered to avoid duplicate hook loading"
             )
+        lsp_config = plugin / ".lsp.json"
+        if lsp_config.exists() and manifest.get("lspServers") != "./.lsp.json":
+            fail(f"{plugin}: LSP config should be exposed with ./.lsp.json")
+        if not lsp_config.exists() and "lspServers" in manifest:
+            fail(f"{plugin}: lspServers declared but .lsp.json does not exist")
 
         command_files = sorted((plugin / "commands").glob("*.md"))
         if command_files and manifest.get("commands") != "./commands":
