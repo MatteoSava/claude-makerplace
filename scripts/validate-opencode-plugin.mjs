@@ -2,7 +2,13 @@ import assert from "node:assert/strict";
 import { mkdtemp } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import plugin from "../opencode-plugin/index.js";
+import pluginModule from "../opencode-plugin/index.js";
+import { server as serverExport } from "../opencode-plugin/index.js";
+
+assert.equal(typeof pluginModule.server, "function", "default export must be PluginModule with .server");
+assert.equal(typeof serverExport, "function", "named server export must be a function");
+
+const plugin = pluginModule.server;
 
 const tempWorkspace = await mkdtemp(path.join(tmpdir(), "makerplace-opencode-"));
 const input = {

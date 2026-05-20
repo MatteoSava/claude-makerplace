@@ -312,4 +312,6 @@ export const ClaudeMakerplacePlugin = async (input, options = {}) => {
   };
 };
 
-export default ClaudeMakerplacePlugin;
+// OpenCode expects PluginModule shape: { server: Plugin }
+export const server = ClaudeMakerplacePlugin;
+export default { server: ClaudeMakerplacePlugin };
