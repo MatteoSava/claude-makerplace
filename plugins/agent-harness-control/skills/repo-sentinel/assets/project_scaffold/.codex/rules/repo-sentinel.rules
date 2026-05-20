@@ -1,0 +1,62 @@
+# Repo Sentinel execpolicy rules for Codex.
+# These rules complement hook checks when Codex requests commands outside the sandbox.
+# Validate with:
+#   codex execpolicy check --pretty --rules .codex/rules/repo-sentinel.rules -- git reset --hard
+
+prefix_rule(
+    pattern = ["git", "reset", "--hard"],
+    decision = "forbidden",
+    justification = "Blocked by Repo Sentinel: git reset --hard destroys uncommitted work. Use git diff/status and targeted restore instead.",
+    match = ["git reset --hard", "git reset --hard HEAD"],
+    not_match = ["git reset --soft HEAD~1"],
+)
+
+prefix_rule(
+    pattern = ["git", "clean"],
+    decision = "prompt",
+    justification = "Repo Sentinel: git clean may delete untracked work; require explicit review.",
+    match = ["git clean -fdx", "git clean -xdf"],
+)
+
+prefix_rule(
+    pattern = ["rm", ["-rf", "-fr", "-rfv", "-rvf"]],
+    decision = "prompt",
+    justification = "Repo Sentinel: recursive/force delete requires review.",
+    match = ["rm -rf build", "rm -fr dist"],
+    not_match = ["rm file.txt"],
+)
+
+prefix_rule(
+    pattern = ["terraform", ["apply", "destroy"]],
+    decision = "forbidden",
+    justification = "Repo Sentinel: Terraform apply/destroy must be run manually after reviewing a plan.",
+    match = ["terraform apply", "terraform destroy -auto-approve"],
+)
+
+prefix_rule(
+    pattern = ["tofu", ["apply", "destroy"]],
+    decision = "forbidden",
+    justification = "Repo Sentinel: OpenTofu apply/destroy must be run manually after reviewing a plan.",
+    match = ["tofu apply", "tofu destroy"],
+)
+
+prefix_rule(
+    pattern = ["kubectl", "delete"],
+    decision = "forbidden",
+    justification = "Repo Sentinel: Kubernetes deletes must be performed manually.",
+    match = ["kubectl delete pod x", "kubectl delete namespace prod"],
+)
+
+prefix_rule(
+    pattern = ["helm", ["uninstall", "delete"]],
+    decision = "forbidden",
+    justification = "Repo Sentinel: Helm destructive operations must be performed manually.",
+    match = ["helm uninstall my-release", "helm delete my-release"],
+)
+
+prefix_rule(
+    pattern = ["docker", ["system", "volume", "network", "image", "container"], "prune"],
+    decision = "prompt",
+    justification = "Repo Sentinel: Docker prune can delete shared local state.",
+    match = ["docker system prune", "docker volume prune -f"],
+)

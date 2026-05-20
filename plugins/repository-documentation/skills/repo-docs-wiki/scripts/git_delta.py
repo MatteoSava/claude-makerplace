@@ -50,12 +50,14 @@ def main() -> int:
     docs = root / args.docs_dir
     head = run_git(["rev-parse", "HEAD"], root)
     state = load_state(docs)
-    base = (
+    base_value = (
         args.base
         or state.get("last_ingested_commit")
         or state.get("last_bootstrap_commit")
     )
+    base = base_value if isinstance(base_value, str) else None
 
+    changes: list[str]
     if base and head:
         out = run_git(["diff", "--name-status", f"{base}..{head}"], root) or ""
         changes = [line for line in out.splitlines() if line.strip()]

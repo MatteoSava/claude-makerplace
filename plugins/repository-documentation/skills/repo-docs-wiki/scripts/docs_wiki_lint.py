@@ -180,7 +180,11 @@ def lint(docs: Path, repo_root: Path) -> list[Finding]:
                 linked.add(resolved)
             if not link_target_exists(page, target, docs):
                 findings.append(
-                    Finding("medium", str(page_rel), f"broken Markdown link: {target}")
+                    Finding(
+                        "medium",
+                        str(page_rel),
+                        f"broken Markdown link: {target}",
+                    )
                 )
 
     index_path = (docs / "index.md").resolve()

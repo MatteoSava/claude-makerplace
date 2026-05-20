@@ -1,0 +1,80 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|clear",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$(git rev-parse --show-toplevel)/.repo-sentinel/repo_sentinel.py\" hook --agent codex",
+            "timeout": 10,
+            "statusMessage": "Loading Repo Sentinel policy"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$(git rev-parse --show-toplevel)/.repo-sentinel/repo_sentinel.py\" hook --agent codex",
+            "timeout": 10,
+            "statusMessage": "Checking prompt against Repo Sentinel"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash|apply_patch|Edit|Write|mcp__.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$(git rev-parse --show-toplevel)/.repo-sentinel/repo_sentinel.py\" hook --agent codex",
+            "timeout": 20,
+            "statusMessage": "Repo Sentinel preflight"
+          }
+        ]
+      }
+    ],
+    "PermissionRequest": [
+      {
+        "matcher": "Bash|apply_patch|Edit|Write|mcp__.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$(git rev-parse --show-toplevel)/.repo-sentinel/repo_sentinel.py\" hook --agent codex",
+            "timeout": 20,
+            "statusMessage": "Repo Sentinel approval guard"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Bash|apply_patch|Edit|Write|mcp__.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$(git rev-parse --show-toplevel)/.repo-sentinel/repo_sentinel.py\" hook --agent codex",
+            "timeout": 30,
+            "statusMessage": "Repo Sentinel post-check"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$(git rev-parse --show-toplevel)/.repo-sentinel/repo_sentinel.py\" hook --agent codex",
+            "timeout": 30,
+            "statusMessage": "Repo Sentinel verification gate"
+          }
+        ]
+      }
+    ]
+  }
+}

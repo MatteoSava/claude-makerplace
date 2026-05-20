@@ -1,0 +1,239 @@
+{
+  "version": 1,
+  "mode": "strict",
+  "overrides": {
+    "allow_all_env": "REPO_SENTINEL_ALLOW_ALL",
+    "allow_destructive_env": "REPO_SENTINEL_ALLOW_DESTRUCTIVE",
+    "allow_config_change_env": "REPO_SENTINEL_ALLOW_CONFIG_CHANGE",
+    "allow_secret_write_env": "REPO_SENTINEL_ALLOW_SECRET_WRITE"
+  },
+  "protected_paths": [
+    ".git/**",
+    "**/.git/**",
+    ".repo-sentinel/**",
+    ".claude/settings*.json",
+    ".claude/hooks/**",
+    ".codex/**",
+    ".agents/**",
+    ".env",
+    ".env.*",
+    "**/.env",
+    "**/.env.*",
+    "**/*secret*",
+    "**/*credential*",
+    "**/*token*",
+    "**/*.pem",
+    "**/*.key",
+    "**/*.p12",
+    "**/*.pfx",
+    ".ssh/**",
+    "**/.ssh/**",
+    ".aws/**",
+    ".kube/**",
+    "node_modules/**",
+    "**/node_modules/**",
+    ".venv/**",
+    "venv/**",
+    "**/.venv/**",
+    "**/venv/**",
+    "dist/**",
+    "build/**",
+    ".next/**",
+    ".turbo/**",
+    "coverage/**"
+  ],
+  "generated_paths": [
+    "node_modules/**",
+    "dist/**",
+    "build/**",
+    "coverage/**",
+    ".next/**",
+    "**/__pycache__/**",
+    "**/*.pyc",
+    "**/.pytest_cache/**"
+  ],
+  "migration_guard": {
+    "protect_existing": true,
+    "patterns": [
+      "**/migrations/*.py",
+      "**/migrations/*.sql",
+      "**/db/migrate/*",
+      "**/schema_migrations/*"
+    ]
+  },
+  "shell": {
+    "deny_regex": [
+      {
+        "name": "recursive-root-delete",
+        "pattern": "(?is)(^|[;&|]\\s*)rm\\s+-(?:[^\\s]*[rf][^\\s]*|[^\\s]*[fr][^\\s]*)(?:\\s+--)?\\s+(?:/|/\\*|~|~/|\\.\\.?)(?:\\s|$)",
+        "reason": "Recursive delete against root/home/current directory is blocked."
+      },
+      {
+        "name": "git-reset-hard",
+        "pattern": "(?is)(^|[;&|]\\s*)git\\s+reset\\s+--hard\\b",
+        "reason": "git reset --hard destroys uncommitted work."
+      },
+      {
+        "name": "git-clean-force",
+        "pattern": "(?is)(^|[;&|]\\s*)git\\s+clean\\s+-[^\\s]*(?:f[^\\s]*d|d[^\\s]*f|x)[^\\s]*\\b",
+        "reason": "git clean with force can delete untracked work."
+      },
+      {
+        "name": "git-restore-everything",
+        "pattern": "(?is)(^|[;&|]\\s*)git\\s+(?:checkout|restore)\\s+(?:--\\s+)?\\.\\s*$",
+        "reason": "Bulk git restore/checkout of the whole tree is blocked."
+      },
+      {
+        "name": "curl-pipe-shell",
+        "pattern": "(?is)(curl|wget)\\b[^|;]*\\|\\s*(?:sudo\\s+)?(?:sh|bash|zsh|fish|python|python3|ruby|perl)\\b",
+        "reason": "Piping remote code directly into an interpreter is blocked."
+      },
+      {
+        "name": "terraform-apply-destroy",
+        "pattern": "(?is)(^|[;&|]\\s*)(?:terraform|tofu)\\s+(?:apply|destroy)\\b",
+        "reason": "Infrastructure apply/destroy requires human execution outside the agent loop."
+      },
+      {
+        "name": "kubectl-delete",
+        "pattern": "(?is)(^|[;&|]\\s*)kubectl\\s+delete\\b",
+        "reason": "Kubernetes delete operations are blocked by default."
+      },
+      {
+        "name": "helm-destructive",
+        "pattern": "(?is)(^|[;&|]\\s*)helm\\s+(?:uninstall|delete|upgrade\\b[^;&|]*--force)\\b",
+        "reason": "Potentially destructive Helm operations are blocked by default."
+      },
+      {
+        "name": "docker-prune",
+        "pattern": "(?is)(^|[;&|]\\s*)docker\\s+(?:system|volume|network|image|container)\\s+prune\\b",
+        "reason": "Docker prune can destroy shared local state."
+      },
+      {
+        "name": "docker-compose-down-volume",
+        "pattern": "(?is)(^|[;&|]\\s*)docker\\s+compose\\s+down\\b[^;&|]*\\s-v\\b",
+        "reason": "docker compose down -v deletes volumes."
+      },
+      {
+        "name": "chmod-777",
+        "pattern": "(?is)(^|[;&|]\\s*)chmod\\s+-R\\s+777\\b",
+        "reason": "Recursive chmod 777 is blocked."
+      },
+      {
+        "name": "disk-format",
+        "pattern": "(?is)(^|[;&|]\\s*)(?:mkfs|fdisk|parted|diskutil\\s+erase|dd\\s+[^;&|]*of=/dev/)\\b",
+        "reason": "Disk formatting/writing commands are blocked."
+      },
+      {
+        "name": "env-file-read",
+        "pattern": "(?is)(^|[;&|]\\s*)(?:cat|less|more|tail|head|grep|rg)\\b[^;&|]*(?:^|\\s)(?:\\.env(?:\\.[\\w.-]+)?|.*secret.*|.*credential.*)(?:\\s|$)",
+        "reason": "Reading local secret files through shell is blocked."
+      }
+    ],
+    "warn_regex": [
+      {
+        "name": "sudo",
+        "pattern": "(?is)(^|[;&|]\\s*)sudo\\b",
+        "message": "sudo command detected; keep privilege escalation outside agent automation unless explicitly intended."
+      },
+      {
+        "name": "network-upload",
+        "pattern": "(?is)(?:curl|wget)\\b[^;&|]*(?:--data|--data-binary|-d)\\s+@",
+        "message": "Command appears to upload a local file over the network."
+      },
+      {
+        "name": "broad-rm",
+        "pattern": "(?is)(^|[;&|]\\s*)rm\\s+-[^\\s]*(?:r|f)[^\\s]*\\b",
+        "message": "Recursive/force delete detected; verify target is disposable."
+      }
+    ],
+    "verification_success_regex": [
+      "(?is)(^|[;&|]\\s*)(?:python\\s+-m\\s+pytest|pytest|uv\\s+run\\s+pytest|tox|nox)\\b",
+      "(?is)(^|[;&|]\\s*)(?:npm|pnpm|yarn|bun)\\s+(?:test|run\\s+test|run\\s+lint|run\\s+typecheck)\\b",
+      "(?is)(^|[;&|]\\s*)(?:go\\s+test|cargo\\s+test|mvn\\s+test|gradle\\s+test|./gradlew\\s+test|make\\s+(?:test|lint|check))\\b",
+      "(?is)(^|[;&|]\\s*)(?:ruff\\s+check|mypy|pyright|eslint|tsc\\b|prettier\\s+--check)\\b",
+      "(?is)(^|[;&|]\\s*)python\\s+\\.repo-sentinel/repo_sentinel\\.py\\s+check\\b"
+    ]
+  },
+  "secret_scan": {
+    "enabled": true,
+    "max_file_bytes": 1048576,
+    "patterns": [
+      {
+        "name": "AWS access key",
+        "regex": "AKIA[0-9A-Z]{16}"
+      },
+      {
+        "name": "GitHub token",
+        "regex": "gh[pousr]_[A-Za-z0-9_]{36,}"
+      },
+      {
+        "name": "OpenAI-style API key",
+        "regex": "sk-[A-Za-z0-9_-]{32,}"
+      },
+      {
+        "name": "Private key header",
+        "regex": "-----BEGIN (?:RSA |EC |OPENSSH |DSA )?PRIVATE KEY-----"
+      },
+      {
+        "name": "Slack token",
+        "regex": "xox[baprs]-[A-Za-z0-9-]{20,}"
+      }
+    ]
+  },
+  "verification": {
+    "require_on_stop": true,
+    "allow_docs_only_stop": true,
+    "max_stop_continuations_per_turn": 1,
+    "code_globs": [
+      "**/*.py",
+      "**/*.js",
+      "**/*.jsx",
+      "**/*.ts",
+      "**/*.tsx",
+      "**/*.go",
+      "**/*.rs",
+      "**/*.java",
+      "**/*.kt",
+      "**/*.c",
+      "**/*.cpp",
+      "**/*.h",
+      "**/*.hpp",
+      "**/*.cs",
+      "**/*.rb",
+      "**/*.php",
+      "**/*.swift",
+      "**/*.scala",
+      "**/*.sql",
+      "Dockerfile",
+      "**/Dockerfile",
+      "**/*.tf",
+      "**/*.yaml",
+      "**/*.yml"
+    ],
+    "docs_globs": [
+      "docs/**",
+      "**/*.md",
+      "**/*.rst",
+      "**/*.txt"
+    ],
+    "ignore_globs": [
+      ".repo-sentinel/**",
+      ".git/**",
+      ".claude/**",
+      ".codex/**",
+      ".agents/**",
+      "node_modules/**",
+      "dist/**",
+      "build/**",
+      "coverage/**"
+    ]
+  },
+  "prompt_guard": {
+    "enabled": true,
+    "block_regex": [
+      "(?is)\\b(disable|remove|bypass)\\b[^\\n]{0,80}\\b(repo[-_ ]?sentinel|hooks?|guardrails?)\\b",
+      "(?is)\\bignore\\b[^\\n]{0,80}\\b(repo[-_ ]?sentinel|safety hook|policy)\\b"
+    ],
+    "allow_phrase": "I authorize repo-sentinel changes"
+  }
+}

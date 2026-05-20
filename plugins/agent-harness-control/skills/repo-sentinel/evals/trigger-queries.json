@@ -1,0 +1,15 @@
+{
+  "skill": "repo-sentinel",
+  "positive": [
+    "install repo guardrails for Claude Code and Codex",
+    "why did Repo Sentinel block git reset --hard?",
+    "tune the protected paths policy",
+    "make Codex require tests before stopping",
+    "add hooks that block destructive shell commands"
+  ],
+  "negative": [
+    "write a normal pytest test",
+    "summarize this README",
+    "generate a UI mockup"
+  ]
+}

@@ -36,7 +36,7 @@ baseline → bounded variant → reproducible run → score/trace review → pro
 
 ## Plugins
 
-The marketplace contains 23 skills across 6 plugins, plus 4 slash commands, 3 Claude Code subagents, 4 OpenCode adapter agents, and 3 runtime hooks.
+The marketplace contains 24 skills across 7 plugins, plus 4 slash commands, 3 Claude Code subagents, 4 OpenCode adapter agents, and 3 runtime hooks.
 
 ### agentic-research
 
@@ -102,6 +102,14 @@ Python quality automation and test-driven development using `uv` with pinned too
 
 **Hooks:** Runs light per-file checks after every `.py` edit, then runs broader project checks on Stop before Claude returns to the user. Tooling is pinned:
 `ruff==0.15.8` · `pyright==1.1.409` · `mypy==2.0.0` · `pytest==9.0.3`
+
+### agent-harness-control
+
+Agent runtime guardrails, hook scaffolds, execpolicy rules, and repository control-plane workflows.
+
+| Skill | Purpose |
+|-------|---------|
+| `repo-sentinel` | Install and operate deterministic repository guardrails for Claude Code and Codex hooks |
 
 ### makerplace-system
 
@@ -217,6 +225,7 @@ This checks: JSON validity, Claude and Codex plugin manifest conventions, OpenCo
 /plugin install product-engineering@claude-makerplace
 /plugin install repository-documentation@claude-makerplace
 /plugin install python-quality@claude-makerplace
+/plugin install agent-harness-control@claude-makerplace
 /plugin install makerplace-system@claude-makerplace
 /reload-plugins
 ```
@@ -228,6 +237,7 @@ Invoke skills:
 /repository-documentation:repo-docs-wiki
 /python-quality:python-quality-gate
 /python-quality:python-tdd
+/agent-harness-control:repo-sentinel
 /makerplace-system:marketplace-health
 /makerplace-system:feedback-makerplace
 ```
@@ -248,6 +258,7 @@ cloud-delivery
 product-engineering
 repository-documentation
 python-quality
+agent-harness-control
 makerplace-system
 ```
 
@@ -291,5 +302,6 @@ claude-makerplace/
     ├── product-engineering/ (6 skills)
     ├── repository-documentation/ (1 skill)
     ├── python-quality/     (2 skills, 1 agent, 1 hook)
+    ├── agent-harness-control/ (1 skill)
     └── makerplace-system/  (4 commands, 2 agents, 1 hook)
 ```

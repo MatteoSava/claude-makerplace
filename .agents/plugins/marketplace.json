@@ -65,6 +65,18 @@
       "category": "Developer Tools"
     },
     {
+      "name": "agent-harness-control",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agent-harness-control"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    },
+    {
       "name": "makerplace-system",
       "source": {
         "source": "local",

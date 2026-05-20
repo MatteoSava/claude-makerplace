@@ -159,5 +159,12 @@
     "type": "skill",
     "path": "plugins/repository-documentation/skills/repo-docs-wiki/SKILL.md",
     "decision": "candidate"
+  },
+  {
+    "name": "repo-sentinel",
+    "plugin": "agent-harness-control",
+    "type": "skill",
+    "path": "plugins/agent-harness-control/skills/repo-sentinel/SKILL.md",
+    "decision": "candidate"
   }
 ]

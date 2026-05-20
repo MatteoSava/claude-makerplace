@@ -39,3 +39,7 @@ This package keeps the selected skill set small and grouped by operational domai
 ## Repository Documentation
 
 - `repo-docs-wiki`: source-grounded docs/ wiki creation, ingest, query, lint, and repair workflow.
+
+## Agent Harness Control
+
+- `repo-sentinel`: deterministic repository guardrails for Claude Code and Codex hooks.

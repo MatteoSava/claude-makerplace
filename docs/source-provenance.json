@@ -4,7 +4,7 @@
   "items": [
     {
       "type": "skills",
-      "count": 23,
+      "count": 24,
       "source": "curated-public-package",
       "notes": "Skill files are sanitized and stored under plugins/*/skills/*/SKILL.md."
     },
