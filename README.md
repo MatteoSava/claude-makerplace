@@ -1,10 +1,34 @@
 # Claude Makerplace
 
-A Claude Code plugin marketplace that packages reusable agent workflows into organized, installable plugins, with thin Codex and OpenCode adapters over the same source layout.
+> A cross-agent marketplace of reusable engineering workflows — packaged as Claude Code plugins, with first-class **Codex** and **OpenCode** adapters over the same source layout.
 
-## How Autoresearch Works
+The marketplace contains 24 skills across 7 plugins, plus 4 slash commands, 3 Claude Code subagents, and 3 runtime hooks — with Codex and OpenCode adapters layered on the same source.
 
-The core idea behind this project: skills are not static instructions. When a skill produces a wrong result, the agent updates the skill itself so the mistake doesn't repeat.
+---
+
+## Table of Contents
+
+- [Why Makerplace](#why-makerplace)
+- [The Autoresearch Loop](#the-autoresearch-loop)
+- [Plugins](#plugins)
+- [Install](#install)
+  - [Claude Code](#claude-code)
+  - [Codex](#codex)
+  - [OpenCode](#opencode)
+- [Hook Profiles](#hook-profiles)
+- [Feedback Delivery](#feedback-delivery)
+- [CI / Validation](#ci--validation)
+- [Repository Layout](#repository-layout)
+
+---
+
+## Why Makerplace
+
+Most agent workflows live as ad-hoc prompts. Makerplace turns them into **versioned, testable, sanitized plugins** that work across Claude Code, Codex, and OpenCode from a single source of truth under `plugins/*`.
+
+The core idea: **skills are not static instructions**. When a skill produces a wrong result, the agent updates the skill itself so the mistake doesn't repeat.
+
+## The Autoresearch Loop
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -26,36 +50,36 @@ The core idea behind this project: skills are not static instructions. When a sk
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-This loop is encoded across the `skill-autoresearch-loop` skill, the `skill-curator` agent, and the `/skill-evolve` command. When a user corrects a mistake or reports friction, the system doesn't just fix the immediate answer — it patches the underlying skill so every future invocation benefits.
+Encoded across the `skill-autoresearch-loop` skill, the `skill-curator` agent, and the `/skill-evolve` command. When a user corrects a mistake or reports friction, the system doesn't just fix the immediate answer — it patches the underlying skill so every future invocation benefits.
 
-For benchmark and experiment workflows, a parallel loop applies:
+For scored experiments, a parallel loop applies:
 
 ```
 baseline → bounded variant → reproducible run → score/trace review → promote or discard
 ```
 
+---
+
 ## Plugins
 
-The marketplace contains 24 skills across 7 plugins, plus 4 slash commands, 3 Claude Code subagents, an installable OpenCode plugin adapter, 15 OpenCode-visible agents, and 3 runtime hooks.
-
-### agentic-research
+### 🧪 `agentic-research`
 
 Self-improving agent workflows and experiment infrastructure.
 
 | Skill | Purpose |
-|-------|---------|
+|---|---|
 | `skill-autoresearch-loop` | Turn feedback, missed behavior, and repeated fixes into durable skill improvements |
-| `agentic-experiment-loop` | Disciplined A/B experiment iteration: baseline → variant → measured run → promote or discard |
+| `agentic-experiment-loop` | Disciplined A/B iteration: baseline → variant → measured run → promote or discard |
 | `benchmark-run-operations` | Launch, monitor, upload, and compare scored benchmark runs with safety gates |
 | `experiment-registry` | Machine-readable registry of experiment runs with provenance, scores, and promotion state |
 | `score-model-probe` | Reverse-engineer opaque scoring functions with minimal targeted probes |
 
-### cloud-delivery
+### ☁️ `cloud-delivery`
 
 Cloud deployment, Azure DevOps delivery, and operational workflows.
 
 | Skill | Purpose |
-|-------|---------|
+|---|---|
 | `azure-container-app-deploy` | Azure Container Apps deployment lifecycle and quick diagnosis |
 | `template-pipeline-authoring` | Generate Azure DevOps YAML pipelines from internal template catalogs |
 | `azure-devops-pr-workflow` | Create and update Azure DevOps PRs via MCP with proper repo/branch resolution |
@@ -64,12 +88,12 @@ Cloud deployment, Azure DevOps delivery, and operational workflows.
 | `internal-wiki-query` | Query organization knowledge bases through MCP, preserving citations |
 | `trmnl-terminus-ops` | Self-hosted TRMNL/Terminus e-ink device operations: health checks, repair, screen publishing |
 
-### product-engineering
+### 🎨 `product-engineering`
 
 Full-stack product work: frontend, streaming, UI validation, and Telegram integrations.
 
 | Skill | Purpose |
-|-------|---------|
+|---|---|
 | `react-typescript-standards` | React + TypeScript standards: explicit types, reducer state, streaming UI, accessibility |
 | `sse-chat-streaming` | SSE chat streaming with explicit event protocol and frontend AbortController parsing |
 | `playwright-ui-validation` | Browser-level UI validation: chat flows, streaming, theme toggle, mobile viewport |
@@ -78,148 +102,69 @@ Full-stack product work: frontend, streaming, UI validation, and Telegram integr
 | `ton-wallet-integration` | TON Connect wallet and on-chain payment flows in Telegram Mini Apps |
 | `intent-system-extension` | Add intents to deterministic AI behavior systems: type registry, scoring, cooldowns |
 
-### repository-documentation
+### 📚 `repository-documentation`
 
 Source-grounded repository documentation workflows.
 
 | Skill | Purpose |
-|-------|---------|
-| `repo-docs-wiki` | Build, ingest, query, lint, and repair source-grounded docs/ wikis and LLM-readable indexes |
+|---|---|
+| `repo-docs-wiki` | Build, ingest, query, lint, and repair source-grounded `docs/` wikis and LLM-readable indexes |
 
-**Hook:** Runs on Stop after docs-wiki files change. It refreshes the docs index when safe, then runs deterministic docs-wiki lint and health checks. Broad repo mapping and subagent fleets remain explicit skill workflows, not hook-triggered background work.
+> **Hook:** Runs on Stop after docs-wiki files change. Refreshes the docs index when safe, then runs deterministic docs-wiki lint and health checks.
 
-### python-quality
+### 🐍 `python-quality`
 
 Python quality automation and test-driven development using `uv` with pinned tooling.
 
 | Skill | Purpose |
-|-------|---------|
+|---|---|
 | `python-quality-gate` | Quality gates for Python edits: Ruff → Pyright → Mypy → pytest, all via `uv` |
 | `python-tdd` | Strict Red → Green → Refactor workflow for Python features and bug fixes with pytest |
 
-**Agent:** `python-quality-reviewer` — delegated uv-only Python review focused on lint, type checking, and test coverage.
+> **Agent:** `python-quality-reviewer` — delegated uv-only Python review focused on lint, type checking, and test coverage.
+>
+> **Hooks:** Per-file checks after every `.py` edit; broader project checks on Stop.
+>
+> **Pinned tooling:** `ruff==0.15.8` · `pyright==1.1.409` · `mypy==2.0.0` · `pytest==9.0.3`
 
-**Hooks:** Runs light per-file checks after every `.py` edit, then runs broader project checks on Stop before Claude returns to the user. Tooling is pinned:
-`ruff==0.15.8` · `pyright==1.1.409` · `mypy==2.0.0` · `pytest==9.0.3`
-
-### agent-harness-control
+### 🛡️ `agent-harness-control`
 
 Agent runtime guardrails, hook scaffolds, continuity ledgers, execpolicy rules, and repository control-plane workflows.
 
 | Skill | Purpose |
-|-------|---------|
+|---|---|
 | `repo-sentinel` | Install and operate deterministic repository guardrails for Claude Code and Codex hooks |
 | `agentops-continuity` | Maintain local task state, compaction recovery, handoff, and verification continuity |
 
-### makerplace-system
+### ⚙️ `makerplace-system`
 
 Marketplace maintenance, audit, and self-improvement infrastructure.
 
-**Commands:**
+**Commands**
 
-- `/marketplace-health` — audit marketplace readiness, sanitization, hook health, and validation drift
-- `/skill-evolve` — turn feedback or repeated friction into a generalized skill improvement
-- `/release-readiness` — prepare a release review with validation evidence and limitations
-- `/feedback-makerplace` — collect sanitized plugin feedback and send it through a configured webhook
+| Command | Purpose |
+|---|---|
+| `/marketplace-health` | Audit marketplace readiness, sanitization, hook health, and validation drift |
+| `/skill-evolve` | Turn feedback or repeated friction into a generalized skill improvement |
+| `/release-readiness` | Prepare a release review with validation evidence and limitations |
+| `/feedback-makerplace` | Collect sanitized plugin feedback and send it through a configured webhook |
 
-**Agents:**
+**Agents**
 
-- `marketplace-auditor` — read-only review for packaging, sanitization, provenance, and validation coverage
-- `skill-curator` — targeted improvement of impacted skills after feedback, using the autoresearch loop
+| Agent | Purpose |
+|---|---|
+| `marketplace-auditor` | Read-only review for packaging, sanitization, provenance, and validation coverage |
+| `skill-curator` | Targeted improvement of impacted skills after feedback, using the autoresearch loop |
 
-**Hook:** `makerplace-guard.sh` — scans edited plugin artifacts for leak markers (local paths, internal hosts, credentials, IPs).
+> **Hook:** `makerplace-guard.sh` — scans edited plugin artifacts for leak markers (local paths, internal hosts, credentials, IPs).
 
-## Hook Profiles
-
-Control the Python quality gate strictness with `MAKERPLACE_HOOK_PROFILE`:
-
-| Profile | Checks |
-|---------|--------|
-| `minimal` | Ruff lint + format |
-| `standard` | Ruff + Pyright + Mypy + targeted pytest |
-| `strict` | All standard checks + full test suite |
-
-Set `MAKERPLACE_HOOKS=off` to disable hooks temporarily.
-
-## Cross-Agent Surfaces
-
-Claude Code is the canonical package format:
-
-- marketplace: `.claude-plugin/marketplace.json`
-- plugin manifests: `plugins/*/.claude-plugin/plugin.json`
-- source components: plugin-local `skills/`, `commands/`, `agents/`, `hooks/`, and `scripts/`
-
-Codex uses a parallel marketplace and per-plugin manifests:
-
-- marketplace: `.agents/plugins/marketplace.json`
-- plugin manifests: `plugins/*/.codex-plugin/plugin.json`
-- plugin icons: `plugins/*/assets/icon.png`, referenced as `interface.composerIcon` and `interface.logo`
-- plugin hooks: `plugins/*/hooks/hooks.json` command hooks can run when Codex plugin hooks are enabled and trusted
-- project hooks: `.codex/hooks.json` can register project-local command hooks; enable them through `.codex/config.toml`
-
-OpenCode supports both a project-local adapter and an installable plugin package:
-
-- config: `opencode.json`
-- runtime plugin: `.opencode/plugins/claude-makerplace.js`
-- installable package entrypoint: `opencode-plugin/index.js`, exported by `@claude-makerplace/opencode-plugin`
-- skills and commands: `.opencode/skills` and `.opencode/commands` link to the Claude plugin source files
-- agents: `.opencode/agents` provides OpenCode-native versions of the lead, auditor, curator, and Python quality roles; the installable package also registers skill-local WebQA and AgentOps subagents
-
-## Feedback Delivery
-
-`/feedback-makerplace` collects sanitized session feedback. Delivery is configured through environment variables.
-
-Generic webhook:
-
-```bash
-export MAKERPLACE_FEEDBACK_DESTINATION=webhook
-export MAKERPLACE_FEEDBACK_WEBHOOK_URL="https://example.com/feedback"
-```
-
-GitHub issue:
-
-```bash
-export MAKERPLACE_FEEDBACK_DESTINATION=github
-export MAKERPLACE_FEEDBACK_GITHUB_REPOSITORY="owner/repo"
-export MAKERPLACE_FEEDBACK_GITHUB_TOKEN="<token-with-issues-write>"
-export MAKERPLACE_FEEDBACK_GITHUB_LABELS="feedback,plugin"
-```
-
-GitHub issue comment:
-
-```bash
-export MAKERPLACE_FEEDBACK_DESTINATION=github
-export MAKERPLACE_FEEDBACK_GITHUB_REPOSITORY="owner/repo"
-export MAKERPLACE_FEEDBACK_GITHUB_ISSUE_NUMBER="123"
-export MAKERPLACE_FEEDBACK_GITHUB_TOKEN="<token-with-issues-write>"
-```
-
-`MAKERPLACE_FEEDBACK_DESTINATION=auto` uses GitHub when `MAKERPLACE_FEEDBACK_GITHUB_REPOSITORY` is set, otherwise it uses `MAKERPLACE_FEEDBACK_WEBHOOK_URL`.
-
-## CI/CD
-
-GitHub Actions validation runs on push, PR, and manual dispatch with pinned infrastructure:
-
-```yaml
-actions/checkout@v6.0.2
-astral-sh/setup-uv@v8.1.0
-uv: 0.11.11
-python: 3.12.13
-```
-
-The CI workflow and local validation use the same entrypoint:
-
-```bash
-./bin/makerplace-validate
-```
-
-This checks: JSON validity, Claude and Codex plugin manifest conventions, OpenCode adapter links, skill frontmatter, README consistency, selection map coverage, hook scripts, executable permissions, privacy leak markers, Claude plugin validation (when available), Python and repo-docs hook smoke tests, and feedback sender behavior.
+---
 
 ## Install
 
 ### Claude Code
 
-```
+```bash
 /plugin marketplace add ./claude-makerplace
 /plugin install agentic-research@claude-makerplace
 /plugin install cloud-delivery@claude-makerplace
@@ -231,41 +176,28 @@ This checks: JSON validity, Claude and Codex plugin manifest conventions, OpenCo
 /reload-plugins
 ```
 
-Invoke skills:
+Invoke a skill:
 
 ```
 /agentic-research:agentic-experiment-loop
 /repository-documentation:repo-docs-wiki
 /product-engineering:webqa-devtools
 /python-quality:python-quality-gate
-/python-quality:python-tdd
 /agent-harness-control:repo-sentinel
-/agent-harness-control:agentops-continuity
 /makerplace-system:marketplace-health
-/makerplace-system:feedback-makerplace
 ```
 
 ### Codex
 
-Use this repository as a local Codex marketplace. The marketplace file is:
+Use this repository as a local Codex marketplace:
 
 ```text
 .agents/plugins/marketplace.json
 ```
 
-It exposes the same organized plugin names:
+It exposes the same organized plugin names as Claude Code. Per-plugin Codex manifests live at `plugins/*/.codex-plugin/plugin.json`.
 
-```text
-agentic-research
-cloud-delivery
-product-engineering
-repository-documentation
-python-quality
-agent-harness-control
-makerplace-system
-```
-
-Codex can run marketplace plugin hooks from each plugin's `hooks/hooks.json` when plugin hooks are enabled and the hook command is trusted. For project-local hooks, use `.codex/hooks.json` plus:
+Enable plugin hooks in `.codex/config.toml`:
 
 ```toml
 [features]
@@ -273,11 +205,13 @@ hooks = true
 plugin_hooks = true
 ```
 
+Codex runs plugin-local hooks from each plugin's `hooks/hooks.json` when plugin hooks are enabled and trusted. For project-local hooks, use `.codex/hooks.json`.
+
 ### OpenCode
 
-Run OpenCode from the repository root to load the project config and `.opencode`
-directory automatically. To load the package from another working directory,
-point OpenCode at both the config file and adapter directory:
+Run OpenCode from the repository root to load `opencode.json` and the `.opencode/` directory automatically.
+
+From another working directory, point OpenCode at both:
 
 ```bash
 OPENCODE_CONFIG=/path/to/claude-makerplace/opencode.json \
@@ -285,7 +219,7 @@ OPENCODE_CONFIG_DIR=/path/to/claude-makerplace/.opencode \
 opencode
 ```
 
-For an installable OpenCode plugin config, add the package entrypoint:
+For an installable plugin config:
 
 ```json
 {
@@ -293,13 +227,13 @@ For an installable OpenCode plugin config, add the package entrypoint:
 }
 ```
 
-After the package is published to npm, install it with:
+Once published to npm:
 
 ```bash
 opencode plugin @claude-makerplace/opencode-plugin
 ```
 
-To let the plugin register Chrome DevTools MCP for `webqa-devtools`, use tuple options:
+To enable Chrome DevTools MCP for `webqa-devtools`, pass tuple options:
 
 ```json
 {
@@ -309,30 +243,118 @@ To let the plugin register Chrome DevTools MCP for `webqa-devtools`, use tuple o
 }
 ```
 
-The default OpenCode primary agent is `makerplace-lead`. OpenCode also sees the
-project skills, commands, and subagents through `.opencode/`. See
-`docs/opencode-install.md` for package behavior, local install options, and the
-OpenCode hook limitations.
+The default OpenCode primary agent is `makerplace-lead`. See `docs/opencode-install.md` for package behavior, local install options, and OpenCode hook limitations.
 
-## Project Structure
+---
+
+## Hook Profiles
+
+Control Python quality gate strictness with `MAKERPLACE_HOOK_PROFILE`:
+
+| Profile | Checks |
+|---|---|
+| `minimal` | Ruff lint + format |
+| `standard` | Ruff + Pyright + Mypy + targeted pytest |
+| `strict` | All standard checks + full test suite |
+
+Set `MAKERPLACE_HOOKS=off` to disable hooks temporarily.
+
+---
+
+## Feedback Delivery
+
+`/feedback-makerplace` collects sanitized session feedback. Delivery is configured through environment variables.
+
+<details>
+<summary><strong>Generic webhook</strong></summary>
+
+```bash
+export MAKERPLACE_FEEDBACK_DESTINATION=webhook
+export MAKERPLACE_FEEDBACK_WEBHOOK_URL="https://example.com/feedback"
+```
+
+</details>
+
+<details>
+<summary><strong>GitHub issue</strong></summary>
+
+```bash
+export MAKERPLACE_FEEDBACK_DESTINATION=github
+export MAKERPLACE_FEEDBACK_GITHUB_REPOSITORY="owner/repo"
+export MAKERPLACE_FEEDBACK_GITHUB_TOKEN="<token-with-issues-write>"
+export MAKERPLACE_FEEDBACK_GITHUB_LABELS="feedback,plugin"
+```
+
+</details>
+
+<details>
+<summary><strong>GitHub issue comment</strong></summary>
+
+```bash
+export MAKERPLACE_FEEDBACK_DESTINATION=github
+export MAKERPLACE_FEEDBACK_GITHUB_REPOSITORY="owner/repo"
+export MAKERPLACE_FEEDBACK_GITHUB_ISSUE_NUMBER="123"
+export MAKERPLACE_FEEDBACK_GITHUB_TOKEN="<token-with-issues-write>"
+```
+
+</details>
+
+Set `MAKERPLACE_FEEDBACK_DESTINATION=auto` to use GitHub when `MAKERPLACE_FEEDBACK_GITHUB_REPOSITORY` is set, otherwise fall back to `MAKERPLACE_FEEDBACK_WEBHOOK_URL`.
+
+---
+
+## CI / Validation
+
+GitHub Actions runs on push, PR, and manual dispatch with pinned infrastructure:
+
+```yaml
+actions/checkout@v6.0.2
+astral-sh/setup-uv@v8.1.0
+uv: 0.11.11
+python: 3.12.13
+```
+
+CI and local validation share a single entrypoint:
+
+```bash
+./bin/makerplace-validate
+```
+
+This checks JSON validity, Claude and Codex plugin manifest conventions, OpenCode adapter links, skill frontmatter, README consistency, selection map coverage, hook scripts, executable permissions, privacy leak markers, Claude plugin validation (when available), Python and repo-docs hook smoke tests, and feedback sender behavior.
+
+---
+
+## Repository Layout
 
 ```
 claude-makerplace/
-├── .agents/plugins/marketplace.json
-├── .claude-plugin/marketplace.json
-├── .opencode/
-├── opencode-plugin/
-├── package.json
+├── .claude-plugin/marketplace.json      # Claude Code marketplace
+├── .agents/plugins/marketplace.json     # Codex marketplace
+├── .opencode/                           # OpenCode project adapter
+├── opencode-plugin/                     # Installable OpenCode package
 ├── opencode.json
+├── package.json
+├── bin/makerplace-validate              # Canonical validation entrypoint
 ├── .github/workflows/validate.yml
-├── bin/makerplace-validate
 ├── docs/
 └── plugins/
-    ├── agentic-research/   (5 skills)
-    ├── cloud-delivery/     (7 skills)
-    ├── product-engineering/ (7 skills)
-    ├── repository-documentation/ (1 skill)
-    ├── python-quality/     (2 skills, 1 agent, 1 hook)
-    ├── agent-harness-control/ (2 skills)
-    └── makerplace-system/  (4 commands, 2 agents, 1 hook)
+    ├── agentic-research/         (5 skills)
+    ├── cloud-delivery/           (7 skills)
+    ├── product-engineering/      (7 skills)
+    ├── repository-documentation/ (1 skill, 1 hook)
+    ├── python-quality/           (2 skills, 1 agent, 1 hook)
+    ├── agent-harness-control/    (2 skills)
+    └── makerplace-system/        (4 commands, 2 agents, 1 hook)
 ```
+
+**Source of truth:** Claude Code remains the canonical plugin layout under `plugins/*`. Codex and OpenCode are thin adapters over the same source.
+
+- **Claude Code:** `.claude-plugin/marketplace.json` + `plugins/*/.claude-plugin/plugin.json`
+- **Codex:** `.agents/plugins/marketplace.json` + `plugins/*/.codex-plugin/plugin.json`
+- **OpenCode:** `opencode.json` + `.opencode/` + `opencode-plugin/` (published as `@claude-makerplace/opencode-plugin`)
+
+---
+
+## License
+
+See [`LICENSE`](./LICENSE).
