@@ -92,7 +92,7 @@
       "name": "agent-harness-control",
       "source": "./plugins/agent-harness-control",
       "description": "Agent runtime guardrails, hook scaffolds, continuity ledgers, execpolicy rules, and repository control-plane workflows for Claude Code and Codex.",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "license": "MIT",
       "category": "Developer Tools",
       "tags": [

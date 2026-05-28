@@ -1,6 +1,6 @@
 {
   "name": "agent-harness-control",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Agent runtime guardrails, hook scaffolds, continuity ledgers, execpolicy rules, and repository control-plane workflows for Claude Code and Codex.",
   "author": {
     "name": "Independent Claude Makerplace"
