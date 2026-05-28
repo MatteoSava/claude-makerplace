@@ -366,7 +366,10 @@ def relpath(repo: Path, path: str | Path) -> Optional[str]:
 
 
 def _norm_glob(path: str) -> str:
-    return path.replace("\\", "/").lstrip("./")
+    normalized = path.replace("\\", "/")
+    while normalized.startswith("./"):
+        normalized = normalized[2:]
+    return normalized
 
 
 def matches_any(path: str, patterns: Iterable[str]) -> bool:
